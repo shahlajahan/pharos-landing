@@ -5,11 +5,18 @@ export const metadata: Metadata = {
   title: "Pharos Teknoloji | Mobile, AI and Custom Software",
   description:
     "Pharos Teknoloji builds mobile applications, AI solutions, and custom software for ambitious teams.",
-  metadataBase: new URL("https://pharosteknoloji.com"),
+  metadataBase: new URL("https://pharosteknoloji.com.tr"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "Pharos Teknoloji",
     description:
       "Mobile development, AI solutions, and custom software for modern companies.",
+    url: "https://pharosteknoloji.com.tr",
+    siteName: "Pharos Teknoloji",
+    locale: "tr_TR",
+    type: "website",
     images: ["/logo.png"],
   },
 };

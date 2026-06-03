@@ -1,4 +1,5 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import {
   ArrowRight,
   Bot,
@@ -14,9 +15,30 @@ import {
   Smartphone,
   Zap,
 } from "lucide-react";
+import { company } from "./company";
+import { SiteFooter } from "./components/SiteFooter";
 
-const phone = "+90 212 853 48 36";
-const phoneHref = "tel:+902128534836";
+const phone = company.phone;
+const phoneHref = company.phoneHref;
+
+export const metadata: Metadata = {
+  title: "Pharos Teknoloji | Mobile, AI and Custom Software",
+  description:
+    "Pharos Teknoloji mobil uygulama, yapay zeka çözümleri ve özel yazılım projeleri geliştirir.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "Pharos Teknoloji | Mobile, AI and Custom Software",
+    description:
+      "Mobil uygulama, yapay zeka çözümleri ve özel yazılım geliştirme partneri.",
+    url: "/",
+    siteName: "Pharos Teknoloji",
+    locale: "tr_TR",
+    type: "website",
+    images: ["/logo.png"],
+  },
+};
 
 const services = [
   {
@@ -378,7 +400,7 @@ export default function Home() {
           </div>
 
           <form
-            action="mailto:info@pharosteknoloji.com"
+            action={company.emailHref}
             method="post"
             encType="text/plain"
             className="rounded-2xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-7"
@@ -489,20 +511,7 @@ export default function Home() {
         </div>
       </section>
 
-      <footer className="bg-[#08111f] px-5 py-8 text-slate-400 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-7xl flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="" width={36} height={36} className="h-9 w-9 rounded-md" />
-            <div>
-              <p className="text-sm font-semibold text-white">Pharos Teknoloji</p>
-              <p className="text-xs">Mobile, AI and Custom Software</p>
-            </div>
-          </div>
-          <p className="text-sm">
-            © {new Date().getFullYear()} Pharos Teknoloji. Tüm hakları saklıdır.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
