@@ -42,13 +42,31 @@ export const metadata: Metadata = {
 
 const services = [
   {
+    icon: Code2,
+    titleTr: "Özel Yazılım Geliştirme",
+    titleEn: "Custom Software Development",
+    bodyTr:
+      "Şirket süreçlerinize özel CRM, panel, entegrasyon, otomasyon ve operasyonel yazılım çözümleri geliştiriyoruz.",
+    bodyEn:
+      "Custom platforms, back-office tools, integrations, automation, and operational software built around your workflows.",
+  },
+  {
     icon: Smartphone,
-    titleTr: "Mobil Geliştirme",
-    titleEn: "Mobile Development",
+    titleTr: "Mobil Uygulama Geliştirme",
+    titleEn: "Mobile App Development",
     bodyTr:
       "iOS ve Android için performanslı, ölçeklenebilir ve kullanıcı odaklı mobil ürünler geliştiriyoruz.",
     bodyEn:
       "High-performance mobile products for iOS and Android with scalable architecture and polished UX.",
+  },
+  {
+    icon: Globe2,
+    titleTr: "Web Çözümleri",
+    titleEn: "Web Solutions",
+    bodyTr:
+      "Kurumsal web siteleri, müşteri portalları, ödeme uyumlu akışlar ve ölçeklenebilir web uygulamaları kuruyoruz.",
+    bodyEn:
+      "Corporate websites, customer portals, payment-ready flows, and scalable web applications.",
   },
   {
     icon: Bot,
@@ -60,21 +78,21 @@ const services = [
       "AI systems that accelerate workflows, extract value from data, and strengthen decision-making.",
   },
   {
-    icon: Code2,
-    titleTr: "Özel Yazılım",
-    titleEn: "Custom Software",
+    icon: Rocket,
+    titleTr: "Dijital Ürün Geliştirme",
+    titleEn: "Digital Product Development",
     bodyTr:
-      "Kuruma özel web platformları, entegrasyonlar ve operasyonel yazılımlar tasarlayıp geliştiriyoruz.",
+      "Ürün fikrinden canlı yayına kadar keşif, UX, mimari, geliştirme, test ve bakım süreçlerini yönetiyoruz.",
     bodyEn:
-      "Tailored web platforms, integrations, and operational software designed around business needs.",
+      "Discovery, UX, architecture, development, testing, launch, and support for digital products.",
   },
 ];
 
 const strengths = [
-  "Product strategy",
-  "Cloud-ready architecture",
-  "Secure delivery",
-  "Long-term support",
+  "Custom software and integrations",
+  "Mobile and web product delivery",
+  "AI-assisted business workflows",
+  "Secure launch and long-term support",
 ];
 
 const metrics = [
@@ -86,7 +104,7 @@ const metrics = [
 const navItems = [
   ["Hizmetler", "Services", "#services"],
   ["Hakkımızda", "About", "#about"],
-  ["İletişim", "Contact", "#contact"],
+  ["İletişim", "Contact", "/contact"],
 ];
 
 export default function Home() {
@@ -157,20 +175,21 @@ export default function Home() {
             </div>
 
             <h1 className="animate-rise text-balance max-w-5xl text-4xl font-semibold leading-[1.02] tracking-normal text-white rise-delay-100 sm:text-5xl lg:text-6xl xl:text-7xl">
-              Pharos Teknoloji ile dijital ürünleriniz daha hızlı ölçeklenir.
+              Custom software, mobile apps, web, AI and digital products.
             </h1>
             <p className="animate-rise mt-5 max-w-2xl text-base leading-8 text-slate-200 rise-delay-200 sm:text-lg">
-              Mobil uygulamalar, yapay zeka çözümleri ve özel yazılım
-              projeleriyle dijital ürünlerinizi uçtan uca hayata geçiriyoruz.
+              Pharos Teknoloji; şirketler için özel yazılım geliştirme, mobil
+              uygulama geliştirme, web çözümleri, yapay zeka çözümleri ve
+              dijital ürün geliştirme hizmetleri sunar.
             </p>
             <p className="animate-rise mt-3 max-w-2xl text-base leading-7 text-slate-400 rise-delay-300">
-              We design and build mobile apps, AI systems, and custom software
-              that help modern companies move faster with confidence.
+              We design, build and support business-critical software from
+              discovery and architecture to launch, maintenance and scaling.
             </p>
 
             <div className="animate-rise mt-7 flex flex-col gap-3 rise-delay-400 sm:flex-row">
               <a
-                href="#contact"
+                href="/contact"
                 className="group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-2xl shadow-emerald-500/24 transition hover:-translate-y-0.5 hover:bg-emerald-300"
               >
                 Proje konuşalım
@@ -185,7 +204,7 @@ export default function Home() {
               </a>
             </div>
 
-            <div className="animate-rise mt-7 grid max-w-xl grid-cols-3 gap-2 rise-delay-500">
+            <div className="animate-rise mt-7 grid max-w-2xl grid-cols-1 gap-2 rise-delay-500 sm:grid-cols-3">
               {metrics.map(([step, title, label]) => (
                 <div key={step} className="rounded-lg border border-white/10 bg-white/6 p-3 backdrop-blur">
                   <p className="text-xs font-bold text-emerald-200">{step}</p>
@@ -263,19 +282,19 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="grid gap-3">
+                  <div className="grid gap-2.5">
                     {services.map((service) => {
                     const Icon = service.icon;
                     return (
                       <div
                         key={service.titleEn}
-                        className="group flex items-center gap-4 rounded-lg border border-white/10 bg-white/[0.07] p-4 backdrop-blur transition hover:border-emerald-300/28 hover:bg-white/10"
+                        className="group flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.07] p-3 backdrop-blur transition hover:border-emerald-300/28 hover:bg-white/10"
                       >
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
-                          <Icon size={20} aria-hidden="true" />
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
+                          <Icon size={18} aria-hidden="true" />
                         </div>
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-semibold text-white">{service.titleEn}</p>
+                          <p className="text-xs font-semibold text-white sm:text-sm">{service.titleEn}</p>
                           <p className="mt-1 text-xs text-slate-400">{service.titleTr}</p>
                         </div>
                         <ArrowRight size={16} className="text-slate-500 transition group-hover:translate-x-1 group-hover:text-emerald-200" />
@@ -310,7 +329,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-9 grid gap-4 md:grid-cols-3">
+          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {services.map((service) => {
               const Icon = service.icon;
               return (
@@ -349,13 +368,15 @@ export default function Home() {
           <div className="rounded-2xl border border-white bg-white/70 p-6 text-base leading-8 text-slate-600 shadow-xl shadow-slate-300/25 backdrop-blur sm:p-8">
             <p>
               Pharos Teknoloji, şirketlerin dijital ürünlerini fikir aşamasından
-              canlı sisteme taşıyan bir yazılım geliştirme partneridir. Teknik
-              kararları iş hedefleriyle hizalar, kısa vadeli teslimat ile uzun
-              vadeli bakım kalitesini birlikte ele alırız.
+              canlı sisteme taşıyan bir yazılım geliştirme partneridir. Özel
+              yazılım geliştirme, mobil uygulama geliştirme, web çözümleri,
+              yapay zeka çözümleri ve dijital ürün geliştirme alanlarında
+              tasarım, mühendislik, entegrasyon, test ve bakım hizmetleri sunarız.
             </p>
             <p className="mt-5">
-              Pharos Teknoloji is a software partner for teams that need reliable
-              execution across mobile, AI, and custom platforms. We work with a
+              Pharos Teknoloji is a software partner for teams that need
+              reliable execution across custom software, mobile apps, web
+              platforms, AI workflows, and digital products. We work with a
               practical delivery model focused on clarity, speed, security, and
               maintainability.
             </p>
@@ -459,9 +480,11 @@ export default function Home() {
                   name="service"
                   className="h-12 rounded-lg border border-white/12 bg-[#162437] px-4 text-sm text-white outline-none transition focus:border-emerald-300/60"
                 >
-                  <option>Mobile Development</option>
+                  <option>Custom Software Development</option>
+                  <option>Mobile App Development</option>
+                  <option>Web Solutions</option>
                   <option>AI Solutions</option>
-                  <option>Custom Software</option>
+                  <option>Digital Product Development</option>
                 </select>
               </label>
               <label className="grid gap-2 sm:col-span-2">

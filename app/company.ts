@@ -22,7 +22,7 @@ export const footerLinks = [
   { label: "Cookies Policy", href: "/cookies" },
   { label: "Platform Disclaimer", href: "/platform-disclaimer" },
   { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export const legalRoutes = [

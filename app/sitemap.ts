@@ -10,6 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 1,
     },
+    {
+      url: `${siteUrl}/contact`,
+      lastModified,
+      changeFrequency: "yearly" as const,
+      priority: 0.7,
+    },
     ...legalRoutes.map((route) => ({
       url: `${siteUrl}${route.path}`,
       lastModified,
