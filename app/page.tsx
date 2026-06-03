@@ -110,16 +110,16 @@ const navItems = [
 export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden">
-      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
-        <nav className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-white/14 bg-[#08111f]/82 px-3 py-2.5 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:px-4">
-          <a href="#top" className="flex items-center gap-3.5" aria-label="Pharos Teknoloji">
-            <span className="relative flex h-16 w-16 items-center justify-center rounded-xl border border-white/16 bg-white/[0.12] shadow-xl shadow-emerald-500/15 ring-1 ring-emerald-300/10">
+      <header className="fixed inset-x-0 top-0 z-50 px-3 pt-1 sm:px-5 sm:pt-1.5">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between rounded-2xl border border-white/14 bg-[#08111f]/82 px-3 py-2 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:px-4">
+          <a href="#top" className="flex items-center gap-3" aria-label="Pharos Teknoloji">
+            <span className="relative flex h-14 w-14 items-center justify-center rounded-xl border border-white/16 bg-white/[0.12] shadow-xl shadow-emerald-500/15 ring-1 ring-emerald-300/10 sm:h-[3.75rem] sm:w-[3.75rem]">
               <Image
                 src="/logo.png"
                 alt="Pharos Teknoloji logo"
                 width={58}
                 height={58}
-                className="h-14 w-14 rounded-lg"
+                className="h-12 w-12 rounded-lg sm:h-[3.25rem] sm:w-[3.25rem]"
                 priority
               />
             </span>
@@ -167,7 +167,7 @@ export default function Home() {
         <div className="absolute left-1/2 top-0 h-[32rem] w-[62rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.22),rgba(30,116,176,0.12)_38%,transparent_70%)] blur-3xl" aria-hidden="true" />
         <div className="absolute bottom-[-18rem] right-[-12rem] h-[38rem] w-[38rem] rounded-full bg-[radial-gradient(circle,rgba(30,116,176,0.24),transparent_66%)] blur-2xl" aria-hidden="true" />
 
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 pt-32 pb-12 sm:px-6 md:pt-36 lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:pt-32 lg:pb-14">
+        <div className="mx-auto grid max-w-7xl gap-8 px-5 pt-[6.75rem] pb-12 sm:px-6 md:pt-[7.25rem] lg:grid-cols-[0.95fr_1.05fr] lg:px-8 lg:pt-[6.75rem] lg:pb-14">
           <div className="flex flex-col justify-center">
             <div className="animate-rise mb-5 inline-flex w-fit items-center gap-2 rounded-md border border-emerald-300/20 bg-emerald-300/10 px-3 py-2 text-xs font-semibold text-emerald-100 shadow-lg shadow-emerald-950/30">
               <Sparkles size={15} aria-hidden="true" />
@@ -215,21 +215,21 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative min-h-[510px] lg:min-h-[620px]">
+          <div className="relative lg:min-h-[620px]">
             <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.18),transparent_64%)] blur-2xl" aria-hidden="true" />
-            <div className="command-surface animate-float relative mx-auto h-[510px] max-w-[620px] rounded-[2rem] border border-white/14 bg-white/8 p-4 shadow-2xl shadow-black/50 backdrop-blur-2xl lg:h-[600px]">
-              <div className="relative h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,31,49,0.96),rgba(8,17,31,0.96))]">
+            <div className="command-surface animate-float relative mx-auto max-w-[620px] rounded-[2rem] border border-white/14 bg-white/8 p-3 shadow-2xl shadow-black/50 backdrop-blur-2xl sm:p-4">
+              <div className="relative overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(145deg,rgba(14,31,49,0.96),rgba(8,17,31,0.96))]">
                 <div className="absolute inset-0 opacity-40 [background-image:linear-gradient(rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px)] [background-size:42px_42px]" aria-hidden="true" />
                 <div className="scan-line absolute left-0 top-0 h-px w-full bg-gradient-to-r from-transparent via-emerald-300 to-transparent" aria-hidden="true" />
 
-                <div className="relative z-10 flex items-center justify-between border-b border-white/10 px-5 py-4">
+                <div className="relative z-10 flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3 sm:px-5 sm:py-4">
                   <div className="flex items-center gap-3">
                     <Image
                       src="/logo.png"
                       alt=""
                       width={62}
                       height={62}
-                      className="h-14 w-14 rounded-lg shadow-xl shadow-black/20"
+                      className="h-12 w-12 rounded-lg shadow-xl shadow-black/20 sm:h-14 sm:w-14"
                     />
                     <div>
                       <p className="text-sm font-semibold text-white">Pharos Operating Layer</p>
@@ -241,10 +241,10 @@ export default function Home() {
                   </span>
                 </div>
 
-                <div className="relative z-10 p-5">
-                  <div className="grid grid-cols-[1fr_0.9fr] gap-3">
+                <div className="relative z-10 p-4 sm:p-5">
+                  <div className="grid gap-3 sm:grid-cols-[1fr_0.9fr]">
                     <div className="rounded-xl border border-white/10 bg-white/8 p-4 backdrop-blur">
-                      <div className="mb-8 flex items-center justify-between">
+                      <div className="mb-5 flex items-center justify-between sm:mb-8">
                         <p className="text-xs font-semibold uppercase text-slate-400">System load</p>
                         <Zap size={18} className="text-emerald-300" />
                       </div>
@@ -256,7 +256,7 @@ export default function Home() {
 
                     <div className="rounded-xl border border-white/10 bg-white/8 p-4 backdrop-blur">
                       <p className="text-xs font-semibold uppercase text-slate-400">Delivery mode</p>
-                      <div className="mt-8 flex items-center gap-3">
+                      <div className="mt-5 flex items-center gap-3 sm:mt-8">
                         <div className="flex h-11 w-11 items-center justify-center rounded-md bg-white text-slate-950">
                           <Rocket size={20} />
                         </div>
@@ -268,16 +268,16 @@ export default function Home() {
                     </div>
                   </div>
 
-                  <div className="relative my-6 flex h-40 items-center justify-center">
-                    <div className="orbital-ring absolute h-40 w-40 rounded-full border border-emerald-300/25" aria-hidden="true" />
-                    <div className="orbital-ring-reverse absolute h-28 w-28 rounded-full border border-sky-300/20" aria-hidden="true" />
-                    <div className="relative flex h-24 w-24 items-center justify-center rounded-2xl border border-white/16 bg-white shadow-2xl shadow-emerald-500/20">
-                      <Image src="/logo.png" alt="" width={76} height={76} className="h-20 w-20 rounded-lg" />
+                  <div className="relative my-5 flex h-32 items-center justify-center sm:my-6 sm:h-40">
+                    <div className="orbital-ring absolute h-32 w-32 rounded-full border border-emerald-300/25 sm:h-40 sm:w-40" aria-hidden="true" />
+                    <div className="orbital-ring-reverse absolute h-24 w-24 rounded-full border border-sky-300/20 sm:h-28 sm:w-28" aria-hidden="true" />
+                    <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-white/16 bg-white shadow-2xl shadow-emerald-500/20 sm:h-24 sm:w-24">
+                      <Image src="/logo.png" alt="" width={76} height={76} className="h-16 w-16 rounded-lg sm:h-20 sm:w-20" />
                     </div>
-                    <div className="absolute left-4 top-6 rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-200 backdrop-blur">
+                    <div className="absolute left-0 top-4 rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-200 backdrop-blur sm:left-4 sm:top-6">
                       AI model ops
                     </div>
-                    <div className="absolute bottom-5 right-2 rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-200 backdrop-blur">
+                    <div className="absolute bottom-4 right-0 rounded-md border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-200 backdrop-blur sm:bottom-5 sm:right-2">
                       Mobile launch
                     </div>
                   </div>
@@ -354,7 +354,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="about" className="relative bg-[linear-gradient(180deg,#edf3f7_0%,#f8fafc_100%)] py-16 text-slate-950 sm:py-20">
+      <section id="about" className="relative bg-[linear-gradient(180deg,#edf3f7_0%,#f8fafc_100%)] pt-14 pb-7 text-slate-950 sm:pt-16 sm:pb-8">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" aria-hidden="true" />
         <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
           <div>
@@ -395,22 +395,24 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="contact" className="relative overflow-hidden bg-slate-950 py-16 text-white shadow-[0_-30px_90px_rgba(15,23,42,0.22)] sm:py-20">
+      <section id="contact" className="relative overflow-hidden bg-slate-950 pt-10 pb-16 text-white shadow-[0_-18px_56px_rgba(15,23,42,0.18)] sm:pt-12 sm:pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(49,165,127,0.18),transparent_28rem),radial-gradient(circle_at_90%_0%,rgba(30,116,176,0.22),transparent_24rem)]" aria-hidden="true" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/50 to-transparent" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
-          <div className="rounded-2xl border border-white/10 bg-white/6 p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-8">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
-              İletişim / Contact
-            </p>
-            <h2 className="mt-4 max-w-3xl text-3xl font-semibold sm:text-5xl">
-              Yeni ürününüzü veya yazılım ihtiyacınızı konuşalım.
-            </h2>
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-              Tell us what you want to build. We will help you shape the right
-              scope, technical path, and delivery plan.
-            </p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+        <div className="relative mx-auto grid max-w-7xl items-stretch gap-6 px-5 sm:px-6 lg:grid-cols-[1fr_1.04fr] lg:gap-8 lg:px-8">
+          <div className="flex h-full min-h-[34rem] flex-col rounded-2xl border border-white/10 bg-white/6 p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-7 lg:min-h-0 lg:p-8">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
+                İletişim / Contact
+              </p>
+              <h2 className="mt-4 max-w-3xl text-3xl font-semibold sm:text-5xl">
+                Yeni ürününüzü veya yazılım ihtiyacınızı konuşalım.
+              </h2>
+              <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
+                Tell us what you want to build. We will help you shape the right
+                scope, technical path, and delivery plan.
+              </p>
+            </div>
+            <div className="mt-7 grid gap-3 sm:grid-cols-3 lg:mt-auto lg:pt-10">
               {["Mobile", "AI", "Software"].map((item) => (
                 <div key={item} className="rounded-lg border border-white/10 bg-white/[0.07] p-4">
                   <p className="text-sm font-semibold">{item}</p>
@@ -424,7 +426,7 @@ export default function Home() {
             action={company.emailHref}
             method="post"
             encType="text/plain"
-            className="rounded-2xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-7"
+            className="h-full rounded-2xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-7"
           >
             <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-6">
               <div className="flex items-center gap-3">

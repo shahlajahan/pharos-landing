@@ -11,6 +11,14 @@ export function CookieConsent() {
     setIsVisible(!window.localStorage.getItem(storageKey));
   }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("cookie-consent-visible", isVisible);
+
+    return () => {
+      document.documentElement.classList.remove("cookie-consent-visible");
+    };
+  }, [isVisible]);
+
   function saveConsent(value: "accepted" | "rejected") {
     window.localStorage.setItem(storageKey, value);
     setIsVisible(false);
@@ -31,7 +39,7 @@ export function CookieConsent() {
           yükümlülükleri yerine getirmek için kullanıyoruz. Tercihinizi KVKK ve
           GDPR ilkelerine uygun şekilde yönetebilirsiniz.{" "}
           <a href="/cookies" className="font-semibold text-emerald-200 transition hover:text-white">
-            Cookies Policy
+            Çerez Politikası
           </a>
         </p>
         <div className="flex shrink-0 gap-2">

@@ -14,12 +14,12 @@ export const company = {
 };
 
 export const footerLinks = [
-  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Gizlilik Politikası", href: "/privacy" },
   { label: "KVKK", href: "/kvkk" },
   { label: "Mesafeli Satış Sözleşmesi", href: "/distance-sales" },
   { label: "İade ve İptal Politikası", href: "/refund" },
-  { label: "Terms & Conditions", href: "/terms" },
-  { label: "Cookies Policy", href: "/cookies" },
+  { label: "Kullanım Şartları", href: "/terms" },
+  { label: "Çerez Politikası", href: "/cookies" },
   { label: "Platform Disclaimer", href: "/platform-disclaimer" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/contact" },

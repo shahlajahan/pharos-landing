@@ -33,18 +33,21 @@ export function SiteFooter() {
         </div>
 
         <div className="lg:pt-1">
-          <section aria-label="Güvenli ödeme yöntemleri" className="mb-5">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <section
+            aria-label="Güvenli ödeme yöntemleri"
+            className="mb-6 rounded-lg border border-white/10 bg-white/[0.04] p-4"
+          >
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <h2 className="text-sm font-semibold text-slate-100">
+                Güvenli Ödeme Altyapısı
+              </h2>
               <Image
                 src="/payments/iyzico-logo-band-colored.svg"
                 alt="iyzico, Visa, Mastercard ve desteklenen güvenli ödeme yöntemleri"
                 width={429}
                 height={32}
-                className="h-8 w-full max-w-[429px] rounded-md bg-white object-contain"
+                className="h-8 w-full max-w-[429px] rounded-md bg-white object-contain object-center"
               />
-              <p className="text-sm font-semibold text-slate-200 sm:text-right">
-                Güvenli Ödeme Altyapısı
-              </p>
             </div>
           </section>
 
