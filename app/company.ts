@@ -14,12 +14,12 @@ export const company = {
 };
 
 export const footerLinks = [
-  { label: "KVKK", href: "/kvkk" },
   { label: "Privacy Policy", href: "/privacy" },
-  { label: "Terms", href: "/terms" },
-  { label: "Distance Sales Agreement", href: "/distance-sales" },
-  { label: "Refund Policy", href: "/refund" },
-  { label: "Cookie Policy", href: "/cookies" },
+  { label: "KVKK", href: "/kvkk" },
+  { label: "Mesafeli Satış Sözleşmesi", href: "/distance-sales" },
+  { label: "İade ve İptal Politikası", href: "/refund" },
+  { label: "Terms & Conditions", href: "/terms" },
+  { label: "Cookies Policy", href: "/cookies" },
   { label: "Platform Disclaimer", href: "/platform-disclaimer" },
   { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },

@@ -1,6 +1,17 @@
 import Image from "next/image";
 import { company, footerLinks } from "../company";
 
+const paymentTrustItems = [
+  { src: "/payments/visa.svg", alt: "Visa", width: 80, height: 32 },
+  { src: "/payments/mastercard.svg", alt: "Mastercard", width: 80, height: 32 },
+  {
+    src: "/payments/iyzico-guvenli-odeme.svg",
+    alt: "iyzico ile Güvenli Ödeme",
+    width: 176,
+    height: 32,
+  },
+];
+
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/10 bg-[#08111f] px-5 py-10 text-slate-400 sm:px-6 lg:px-8">
@@ -33,6 +44,21 @@ export function SiteFooter() {
         </div>
 
         <div className="lg:pt-1">
+          <section aria-label="Güvenli ödeme yöntemleri" className="mb-5">
+            <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
+              {paymentTrustItems.map((item) => (
+                <Image
+                  key={item.src}
+                  src={item.src}
+                  alt={item.alt}
+                  width={item.width}
+                  height={item.height}
+                  className="h-8 w-auto rounded-md shadow-sm shadow-black/10"
+                />
+              ))}
+            </div>
+          </section>
+
           <nav aria-label="Alt bilgi bağlantıları" className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             {footerLinks.map((link) => (
               <a
