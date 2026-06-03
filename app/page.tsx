@@ -5,17 +5,22 @@ import {
   Bot,
   CheckCircle2,
   Code2,
-  Cpu,
+  ClipboardCheck,
+  CreditCard,
   Globe2,
   Menu,
-  Send,
   Phone,
+  ReceiptText,
   Rocket,
+  Send,
   Sparkles,
   Smartphone,
+  ThumbsUp,
   Zap,
 } from "lucide-react";
 import { company } from "./company";
+import { ContactForm } from "./components/ContactForm";
+import { ServiceQuoteLink } from "./components/ServiceQuoteLink";
 import { SiteFooter } from "./components/SiteFooter";
 
 const phone = company.phone;
@@ -49,6 +54,7 @@ const services = [
       "Şirket süreçlerinize özel CRM, panel, entegrasyon, otomasyon ve operasyonel yazılım çözümleri geliştiriyoruz.",
     bodyEn:
       "Custom platforms, back-office tools, integrations, automation, and operational software built around your workflows.",
+    price: "Starting from ₺25.000",
   },
   {
     icon: Smartphone,
@@ -58,6 +64,7 @@ const services = [
       "iOS ve Android için performanslı, ölçeklenebilir ve kullanıcı odaklı mobil ürünler geliştiriyoruz.",
     bodyEn:
       "High-performance mobile products for iOS and Android with scalable architecture and polished UX.",
+    price: "Starting from ₺40.000",
   },
   {
     icon: Globe2,
@@ -67,6 +74,7 @@ const services = [
       "Kurumsal web siteleri, müşteri portalları, ödeme uyumlu akışlar ve ölçeklenebilir web uygulamaları kuruyoruz.",
     bodyEn:
       "Corporate websites, customer portals, payment-ready flows, and scalable web applications.",
+    price: "Starting from ₺15.000",
   },
   {
     icon: Bot,
@@ -76,6 +84,7 @@ const services = [
       "İş akışlarını hızlandıran, veriden değer üreten ve karar süreçlerini güçlendiren AI sistemleri kuruyoruz.",
     bodyEn:
       "AI systems that accelerate workflows, extract value from data, and strengthen decision-making.",
+    price: "Starting from ₺30.000",
   },
   {
     icon: Rocket,
@@ -85,6 +94,7 @@ const services = [
       "Ürün fikrinden canlı yayına kadar keşif, UX, mimari, geliştirme, test ve bakım süreçlerini yönetiyoruz.",
     bodyEn:
       "Discovery, UX, architecture, development, testing, launch, and support for digital products.",
+    price: "Starting from ₺20.000",
   },
 ];
 
@@ -99,6 +109,44 @@ const metrics = [
   ["01", "Discovery", "Strateji / Strategy"],
   ["02", "Build", "Mobil + AI + Software"],
   ["03", "Scale", "Cloud-ready systems"],
+];
+
+const processSteps = [
+  {
+    icon: Send,
+    titleTr: "Talebinizi Gönderin",
+    titleEn: "Submit Request",
+    bodyTr: "İhtiyacınızı ve proje detaylarınızı paylaşın.",
+    bodyEn: "Share your requirements and project details.",
+  },
+  {
+    icon: ReceiptText,
+    titleTr: "Teklifinizi Alın",
+    titleEn: "Receive Proposal",
+    bodyTr: "Ekibimiz size kapsam ve fiyat teklifi hazırlar.",
+    bodyEn: "Our team prepares scope and pricing.",
+  },
+  {
+    icon: ThumbsUp,
+    titleTr: "Projeyi Onaylayın",
+    titleEn: "Approve Project",
+    bodyTr: "Teklifi onaylayın ve geliştirme sürecini başlatalım.",
+    bodyEn: "Approve proposal and start development.",
+  },
+  {
+    icon: CreditCard,
+    titleTr: "Güvenli Ödeme Yapın",
+    titleEn: "Pay Securely",
+    bodyTr: "Proje onayından sonra güvenli ödeme bağlantısı paylaşılır.",
+    bodyEn: "Secure payment link is shared after project approval.",
+  },
+  {
+    icon: ClipboardCheck,
+    titleTr: "Geliştirmeye Başlayalım",
+    titleEn: "Start Development",
+    bodyTr: "Teslim planı ile geliştirme sürecine geçiyoruz.",
+    bodyEn: "We move into development with a delivery plan.",
+  },
 ];
 
 const navItems = [
@@ -313,8 +361,8 @@ export default function Home() {
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/60 to-transparent" aria-hidden="true" />
         <div className="absolute right-[-14rem] top-6 h-80 w-80 rounded-full bg-emerald-200/30 blur-3xl" aria-hidden="true" />
         <div className="absolute left-[-10rem] bottom-0 h-72 w-72 rounded-full bg-sky-200/40 blur-3xl" aria-hidden="true" />
-        <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+        <div className="relative mx-auto max-w-[96rem] px-5 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div className="max-w-3xl">
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">
                 Hizmetler / Services
@@ -323,19 +371,19 @@ export default function Home() {
                 Ürün, teknoloji ve operasyonu tek akışta birleştiriyoruz.
               </h2>
             </div>
-            <p className="max-w-md text-base leading-7 text-slate-600 sm:text-lg">
+            <p className="max-w-sm rounded-xl border border-white bg-white/60 p-4 text-sm leading-6 text-slate-600 shadow-lg shadow-slate-300/20 backdrop-blur sm:text-base">
               We combine product thinking, engineering discipline, and business
               context to ship software that holds up after launch.
             </p>
           </div>
 
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <div className="mt-7 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {services.map((service) => {
               const Icon = service.icon;
               return (
                 <article
                   key={service.titleEn}
-                  className="group relative overflow-hidden rounded-2xl border border-white bg-white/[0.76] p-6 shadow-xl shadow-slate-300/30 backdrop-blur transition hover:-translate-y-1 hover:border-emerald-300 hover:bg-white hover:shadow-2xl hover:shadow-slate-300/60"
+                  className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white bg-white/[0.76] p-6 shadow-xl shadow-slate-300/30 backdrop-blur transition hover:-translate-y-1 hover:border-emerald-300 hover:bg-white hover:shadow-2xl hover:shadow-slate-300/60"
                 >
                   <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 via-sky-400 to-transparent opacity-0 transition group-hover:opacity-100" />
                   <div className="flex h-12 w-12 items-center justify-center rounded-md bg-slate-950 text-white shadow-lg shadow-slate-950/15">
@@ -345,8 +393,20 @@ export default function Home() {
                   <p className="mt-1 text-sm font-semibold text-emerald-700">
                     {service.titleEn}
                   </p>
-                  <p className="mt-4 text-sm leading-6 text-slate-600">{service.bodyTr}</p>
-                  <p className="mt-3 text-sm leading-6 text-slate-500">{service.bodyEn}</p>
+                  <p className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">
+                    {service.price}
+                  </p>
+                  <div className="mt-4 flex flex-1 flex-col gap-3">
+                    <p className="text-sm leading-6 text-slate-600">{service.bodyTr}</p>
+                    <p className="text-sm leading-6 text-slate-500">{service.bodyEn}</p>
+                  </div>
+                  <ServiceQuoteLink
+                    service={service.titleEn}
+                    className="mx-auto mt-5 inline-flex h-12 w-fit max-w-[70%] min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                  >
+                    Teklif Al
+                    <ArrowRight size={16} aria-hidden="true" />
+                  </ServiceQuoteLink>
                 </article>
               );
             })}
@@ -356,8 +416,8 @@ export default function Home() {
 
       <section id="about" className="relative bg-[linear-gradient(180deg,#edf3f7_0%,#f8fafc_100%)] pt-14 pb-7 text-slate-950 sm:pt-16 sm:pb-8">
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" aria-hidden="true" />
-        <div className="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div>
+        <div className="mx-auto grid max-w-7xl items-start gap-6 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+          <div className="pt-1 lg:pt-3">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-700">
               Hakkımızda / About
             </p>
@@ -398,7 +458,43 @@ export default function Home() {
       <section id="contact" className="relative overflow-hidden bg-slate-950 pt-10 pb-16 text-white shadow-[0_-18px_56px_rgba(15,23,42,0.18)] sm:pt-12 sm:pb-20">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(49,165,127,0.18),transparent_28rem),radial-gradient(circle_at_90%_0%,rgba(30,116,176,0.22),transparent_24rem)]" aria-hidden="true" />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald-300/50 to-transparent" aria-hidden="true" />
-        <div className="relative mx-auto grid max-w-7xl items-stretch gap-6 px-5 sm:px-6 lg:grid-cols-[1fr_1.04fr] lg:gap-8 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="mb-6 rounded-2xl border border-white/10 bg-white/6 p-5 shadow-2xl shadow-black/20 backdrop-blur-xl sm:p-6">
+            <div className="flex flex-col gap-5">
+              <div className="max-w-3xl">
+                <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
+                  Nasıl çalışıyoruz?
+                </p>
+                <h2 className="mt-3 text-2xl font-semibold text-white sm:text-3xl">
+                  How it works?
+                </h2>
+              </div>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+                {processSteps.map((step, index) => {
+                  const Icon = step.icon;
+
+                  return (
+                    <div key={step.titleEn} className="rounded-lg border border-white/10 bg-white/[0.07] p-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <p className="text-xs font-bold text-emerald-200">
+                          {String(index + 1).padStart(2, "0")}
+                        </p>
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
+                          <Icon size={17} aria-hidden="true" />
+                        </div>
+                      </div>
+                      <p className="mt-3 text-sm font-semibold text-white">{step.titleTr}</p>
+                      <p className="mt-1 text-xs font-semibold text-emerald-100/80">{step.titleEn}</p>
+                      <p className="mt-3 text-sm leading-6 text-slate-300">{step.bodyTr}</p>
+                      <p className="mt-1 text-xs leading-5 text-slate-500">{step.bodyEn}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid items-stretch gap-6 lg:grid-cols-[1fr_1.04fr] lg:gap-8">
           <div className="flex h-full min-h-[34rem] flex-col rounded-2xl border border-white/10 bg-white/6 p-6 shadow-2xl shadow-black/25 backdrop-blur-xl sm:p-7 lg:min-h-0 lg:p-8">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
@@ -422,117 +518,11 @@ export default function Home() {
             </div>
           </div>
 
-          <form
-            action={company.emailHref}
-            method="post"
-            encType="text/plain"
+          <ContactForm
+            variant="home"
             className="h-full rounded-2xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-7"
-          >
-            <div className="mb-8 flex items-center justify-between border-b border-white/10 pb-6">
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white text-slate-950">
-                  <Globe2 size={22} />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-white">Pharos Teknoloji</p>
-                  <p className="text-xs text-slate-400">Istanbul / Global delivery</p>
-                </div>
-              </div>
-              <Cpu className="text-emerald-300" size={22} />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Ad Soyad / Name
-                </span>
-                <input
-                  name="name"
-                  required
-                  className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
-                  placeholder="Adınız"
-                />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  E-posta / Email
-                </span>
-                <input
-                  type="email"
-                  name="email"
-                  required
-                  className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
-                  placeholder="you@company.com"
-                />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Telefon / Phone
-                </span>
-                <input
-                  name="phone"
-                  className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
-                  placeholder="+90"
-                />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Hizmet / Service
-                </span>
-                <select
-                  name="service"
-                  className="h-12 rounded-lg border border-white/12 bg-[#162437] px-4 text-sm text-white outline-none transition focus:border-emerald-300/60"
-                >
-                  <option>Custom Software Development</option>
-                  <option>Mobile App Development</option>
-                  <option>Web Solutions</option>
-                  <option>AI Solutions</option>
-                  <option>Digital Product Development</option>
-                </select>
-              </label>
-              <label className="grid gap-2 sm:col-span-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Proje Notu / Project Brief
-                </span>
-                <textarea
-                  name="message"
-                  rows={4}
-                  className="resize-none rounded-lg border border-white/12 bg-white/[0.08] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
-                  placeholder="Ne geliştirmek istiyorsunuz?"
-                />
-              </label>
-            </div>
-
-            <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.06] p-4">
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-md bg-emerald-400 text-slate-950">
-                  <Phone size={21} aria-hidden="true" />
-                </div>
-                <div>
-                  <p className="text-sm font-semibold text-slate-400">Telefon / Phone</p>
-                  <a href={phoneHref} className="mt-2 block text-2xl font-semibold">
-                    {phone}
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="submit"
-                className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-              >
-                <Send size={17} aria-hidden="true" />
-                Gönder / Send
-              </button>
-              <a
-                href={phoneHref}
-                className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg border border-white/14 bg-white/6 px-5 text-sm font-semibold transition hover:-translate-y-0.5 hover:bg-white/10"
-              >
-                <Phone size={17} aria-hidden="true" />
-                Hemen ara
-              </a>
-            </div>
-          </form>
+          />
+          </div>
         </div>
       </section>
 

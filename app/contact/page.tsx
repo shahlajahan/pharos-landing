@@ -1,7 +1,8 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowLeft, Building2, Mail, MapPin, Phone, Send } from "lucide-react";
+import { ArrowLeft, Building2, Mail, MapPin, Phone } from "lucide-react";
 import { company } from "../company";
+import { ContactForm } from "../components/ContactForm";
 import { SiteFooter } from "../components/SiteFooter";
 
 export const metadata: Metadata = {
@@ -91,65 +92,10 @@ export default function ContactPage() {
             </div>
           </aside>
 
-          <form
-            action={company.emailHref}
-            method="post"
-            encType="text/plain"
+          <ContactForm
+            variant="contact"
             className="rounded-xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:p-7"
-          >
-            <div className="mb-7 border-b border-white/10 pb-5">
-              <p className="text-sm font-semibold text-white">Contact form</p>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
-                Proje kapsamınızı, hedef platformları ve ihtiyaç duyduğunuz
-                zamanlamayı paylaşabilirsiniz.
-              </p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Ad Soyad / Name
-                </span>
-                <input name="name" required className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]" placeholder="Adınız" />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  E-posta / Email
-                </span>
-                <input type="email" name="email" required className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]" placeholder="you@company.com" />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Telefon / Phone
-                </span>
-                <input name="phone" className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]" placeholder="+90" />
-              </label>
-              <label className="grid gap-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Hizmet / Service
-                </span>
-                <select name="service" className="h-12 rounded-lg border border-white/12 bg-[#162437] px-4 text-sm text-white outline-none transition focus:border-emerald-300/60">
-                  <option>Custom Software Development</option>
-                  <option>Mobile App Development</option>
-                  <option>Web Solutions</option>
-                  <option>AI Solutions</option>
-                  <option>Digital Product Development</option>
-                </select>
-              </label>
-              <label className="grid gap-2 sm:col-span-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Mesaj / Message
-                </span>
-                <textarea name="message" rows={5} required className="resize-none rounded-lg border border-white/12 bg-white/[0.08] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]" placeholder="Ne geliştirmek istiyorsunuz?" />
-              </label>
-            </div>
-            <button
-              type="submit"
-              className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-            >
-              <Send size={17} aria-hidden="true" />
-              Gönder / Send
-            </button>
-          </form>
+          />
         </div>
       </section>
 
