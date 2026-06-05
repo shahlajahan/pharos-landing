@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "firebase-admin": "^13.10.0",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",
