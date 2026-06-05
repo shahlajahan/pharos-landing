@@ -4,7 +4,9 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 90, 100],
   },
-  serverExternalPackages: ["iyzipay"],
+  outputFileTracingIncludes: {
+    "/api/payment/*": ["./node_modules/iyzipay/lib/resources/**/*"],
+  },
 };
 
 export default nextConfig;
