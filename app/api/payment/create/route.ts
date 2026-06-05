@@ -32,13 +32,23 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+function logPaymentCreateError(
+  message: string,
+  context?: Record<string, unknown>
+) {
+  console.error("PAYMENT CREATE ERROR", { message, ...context });
+}
+
 export async function POST(request: Request) {
+  console.log("PAYMENT CREATE START");
+
   try {
     const payload = (await request.json()) as CreatePaymentPayload;
     const postedService = payload.service;
     const buyer = payload.buyer;
 
     if (!postedService?.id || !postedService.name || !postedService.price) {
+      logPaymentCreateError("Selected service is required.");
       return NextResponse.json(
         { error: "Selected service is required." },
         { status: 400 }
@@ -48,6 +58,9 @@ export async function POST(request: Request) {
     const catalogService = getServiceBySlug(postedService.id);
 
     if (!catalogService) {
+      logPaymentCreateError("Selected service was not found.", {
+        serviceId: postedService.id,
+      });
       return NextResponse.json(
         { error: "Selected service was not found." },
         { status: 400 }
@@ -58,6 +71,9 @@ export async function POST(request: Request) {
       postedService.name !== catalogService.titleEn ||
       postedService.price !== catalogService.price
     ) {
+      logPaymentCreateError("Selected service data does not match the catalog.", {
+        serviceId: postedService.id,
+      });
       return NextResponse.json(
         { error: "Selected service data does not match the catalog." },
         { status: 400 }
@@ -65,6 +81,9 @@ export async function POST(request: Request) {
     }
 
     if (!buyer?.name?.trim() || !buyer.email?.trim()) {
+      logPaymentCreateError("Buyer name and email are required.", {
+        serviceId: catalogService.slug,
+      });
       return NextResponse.json(
         { error: "Buyer name and email are required." },
         { status: 400 }
@@ -72,6 +91,9 @@ export async function POST(request: Request) {
     }
 
     if (!isValidEmail(buyer.email)) {
+      logPaymentCreateError("A valid buyer email is required.", {
+        serviceId: catalogService.slug,
+      });
       return NextResponse.json(
         { error: "A valid buyer email is required." },
         { status: 400 }
@@ -96,6 +118,13 @@ export async function POST(request: Request) {
     });
 
     if (result.status !== "success") {
+      logPaymentCreateError(
+        result.errorMessage ?? "iyzico checkout could not be created.",
+        {
+          serviceId: catalogService.slug,
+          iyzicoStatus: result.status,
+        }
+      );
       return NextResponse.json(
         {
           error: result.errorMessage ?? "iyzico checkout could not be created.",
@@ -104,6 +133,11 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("PAYMENT CREATE SUCCESS", {
+      serviceId: catalogService.slug,
+      iyzicoStatus: result.status,
+    });
+
     return NextResponse.json({
       token: result.token,
       checkoutFormContent: result.checkoutFormContent,
@@ -111,17 +145,19 @@ export async function POST(request: Request) {
       paymentPageUrl: result.paymentPageUrl,
     });
   } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Payment initialization failed.";
+
+    logPaymentCreateError(message);
+
     if (error instanceof IyzicoConfigError) {
       return NextResponse.json(
         { error: "Iyzico credentials are not configured" },
         { status: 500 }
       );
     }
-
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Payment initialization failed.";
 
     return NextResponse.json({ error: message }, { status: 500 });
   }

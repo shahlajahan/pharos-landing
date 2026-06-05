@@ -1,10 +1,6 @@
 import { createHmac, randomUUID, timingSafeEqual } from "crypto";
 import { company, siteUrl } from "../../company";
 
-// The iyzipay package is CommonJS and does not ship TypeScript definitions.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Iyzipay = require("iyzipay");
-
 type IyzicoResult = {
   status?: string;
   errorMessage?: string;
@@ -18,6 +14,12 @@ type IyzicoResult = {
   price?: string;
   paidPrice?: string;
   currency?: string;
+};
+
+type IyzicoConfig = {
+  uri: string;
+  apiKey: string;
+  secretKey: string;
 };
 
 type IyzicoClient = {
@@ -34,6 +36,24 @@ type IyzicoClient = {
     ) => void;
   };
 };
+
+type CheckoutFormInitializeResource = IyzicoClient["checkoutFormInitialize"];
+type CheckoutFormResource = IyzicoClient["checkoutForm"];
+type IyzicoResourceConstructor<TResource> = new (
+  config: IyzicoConfig
+) => TResource;
+
+// The iyzipay package is CommonJS and does not ship TypeScript definitions.
+// Import only the resources this app uses. The top-level iyzipay constructor
+// scans lib/resources at runtime, which is brittle in Vercel serverless bundles.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CheckoutFormInitialize = require("iyzipay/lib/resources/CheckoutFormInitialize") as IyzicoResourceConstructor<
+  CheckoutFormInitializeResource
+>;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const CheckoutForm = require("iyzipay/lib/resources/CheckoutForm") as IyzicoResourceConstructor<
+  CheckoutFormResource
+>;
 
 export class IyzicoConfigError extends Error {
   constructor() {
@@ -57,10 +77,10 @@ export type PaymentService = {
   price: number;
 };
 
-const locale = Iyzipay.LOCALE.TR;
-const currency = Iyzipay.CURRENCY.TRY;
-const paymentGroup = Iyzipay.PAYMENT_GROUP.PRODUCT;
-const basketItemType = Iyzipay.BASKET_ITEM_TYPE.VIRTUAL;
+const locale = "tr";
+const currency = "TRY";
+const paymentGroup = "PRODUCT";
+const basketItemType = "VIRTUAL";
 
 function getRequiredIyzicoConfig() {
   const uri = process.env.IYZICO_BASE_URL?.trim();
@@ -79,7 +99,12 @@ function getRequiredIyzicoConfig() {
 }
 
 function getIyzicoClient(): IyzicoClient {
-  return new Iyzipay(getRequiredIyzicoConfig());
+  const config = getRequiredIyzicoConfig();
+
+  return {
+    checkoutFormInitialize: new CheckoutFormInitialize(config),
+    checkoutForm: new CheckoutForm(config),
+  };
 }
 
 export function getPublicBaseUrl(request: Request) {
