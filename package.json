@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "iyzipay": "^2.0.67",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",

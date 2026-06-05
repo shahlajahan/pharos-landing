@@ -188,9 +188,9 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
         <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm leading-6 text-emerald-100">
           <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
           <p>
-            Talebiniz alındı. Ekibimiz teklif ile sizinle iletişime geçecektir.
+            Talebiniz alındı. Ekibimiz kapsam ve satın alma süreci için sizinle iletişime geçecektir.
             <span className="mt-1 block text-emerald-100/80">
-              Your request has been received. Our team will contact you with a proposal.
+              Your request has been received. Our team will contact you about scope and purchase next steps.
             </span>
           </p>
         </div>
@@ -217,9 +217,9 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
         ) : null}
       </div>
       <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-xs leading-5 text-slate-400">
-        Proje onayından sonra güvenli ödeme bağlantısı paylaşılır.
+        Hizmet detay sayfalarından sabit başlangıç fiyatı ile satın alma akışına geçebilirsiniz.
         <span className="block text-slate-500">
-          Secure payment link is shared after project approval.
+          Fixed-price service checkout is available from each service detail page.
         </span>
       </p>
     </form>

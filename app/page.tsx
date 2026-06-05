@@ -7,12 +7,15 @@ import {
   Code2,
   ClipboardCheck,
   CreditCard,
+  FileCheck2,
   Globe2,
   Menu,
   Phone,
+  Receipt,
   ReceiptText,
   Rocket,
   Send,
+  ShieldCheck,
   Sparkles,
   Smartphone,
   ThumbsUp,
@@ -20,8 +23,8 @@ import {
 } from "lucide-react";
 import { company } from "./company";
 import { ContactForm } from "./components/ContactForm";
-import { ServiceQuoteLink } from "./components/ServiceQuoteLink";
 import { SiteFooter } from "./components/SiteFooter";
+import { services } from "./services";
 
 const phone = company.phone;
 const phoneHref = company.phoneHref;
@@ -45,58 +48,13 @@ export const metadata: Metadata = {
   },
 };
 
-const services = [
-  {
-    icon: Code2,
-    titleTr: "Özel Yazılım Geliştirme",
-    titleEn: "Custom Software Development",
-    bodyTr:
-      "Şirket süreçlerinize özel CRM, panel, entegrasyon, otomasyon ve operasyonel yazılım çözümleri geliştiriyoruz.",
-    bodyEn:
-      "Custom platforms, back-office tools, integrations, automation, and operational software built around your workflows.",
-    price: "Starting from ₺25.000",
-  },
-  {
-    icon: Smartphone,
-    titleTr: "Mobil Uygulama Geliştirme",
-    titleEn: "Mobile App Development",
-    bodyTr:
-      "iOS ve Android için performanslı, ölçeklenebilir ve kullanıcı odaklı mobil ürünler geliştiriyoruz.",
-    bodyEn:
-      "High-performance mobile products for iOS and Android with scalable architecture and polished UX.",
-    price: "Starting from ₺40.000",
-  },
-  {
-    icon: Globe2,
-    titleTr: "Web Çözümleri",
-    titleEn: "Web Solutions",
-    bodyTr:
-      "Kurumsal web siteleri, müşteri portalları, ödeme uyumlu akışlar ve ölçeklenebilir web uygulamaları kuruyoruz.",
-    bodyEn:
-      "Corporate websites, customer portals, payment-ready flows, and scalable web applications.",
-    price: "Starting from ₺15.000",
-  },
-  {
-    icon: Bot,
-    titleTr: "Yapay Zeka Çözümleri",
-    titleEn: "AI Solutions",
-    bodyTr:
-      "İş akışlarını hızlandıran, veriden değer üreten ve karar süreçlerini güçlendiren AI sistemleri kuruyoruz.",
-    bodyEn:
-      "AI systems that accelerate workflows, extract value from data, and strengthen decision-making.",
-    price: "Starting from ₺30.000",
-  },
-  {
-    icon: Rocket,
-    titleTr: "Dijital Ürün Geliştirme",
-    titleEn: "Digital Product Development",
-    bodyTr:
-      "Ürün fikrinden canlı yayına kadar keşif, UX, mimari, geliştirme, test ve bakım süreçlerini yönetiyoruz.",
-    bodyEn:
-      "Discovery, UX, architecture, development, testing, launch, and support for digital products.",
-    price: "Starting from ₺20.000",
-  },
-];
+const serviceIcons = {
+  code: Code2,
+  mobile: Smartphone,
+  web: Globe2,
+  ai: Bot,
+  product: Rocket,
+};
 
 const strengths = [
   "Custom software and integrations",
@@ -121,24 +79,24 @@ const processSteps = [
   },
   {
     icon: ReceiptText,
-    titleTr: "Teklifinizi Alın",
-    titleEn: "Receive Proposal",
-    bodyTr: "Ekibimiz size kapsam ve fiyat teklifi hazırlar.",
-    bodyEn: "Our team prepares scope and pricing.",
+    titleTr: "Hizmeti Satın Alın",
+    titleEn: "Buy Service",
+    bodyTr: "Detay sayfasından sabit başlangıç fiyatı ile satın alma akışına geçin.",
+    bodyEn: "Continue from the service page to the fixed-price purchase flow.",
   },
   {
     icon: ThumbsUp,
-    titleTr: "Projeyi Onaylayın",
-    titleEn: "Approve Project",
-    bodyTr: "Teklifi onaylayın ve geliştirme sürecini başlatalım.",
-    bodyEn: "Approve proposal and start development.",
+    titleTr: "Siparişi Onaylayın",
+    titleEn: "Confirm Order",
+    bodyTr: "Sipariş özetini onaylayın ve ödeme adımına geçin.",
+    bodyEn: "Confirm the order summary and continue to payment.",
   },
   {
     icon: CreditCard,
     titleTr: "Güvenli Ödeme Yapın",
     titleEn: "Pay Securely",
-    bodyTr: "Proje onayından sonra güvenli ödeme bağlantısı paylaşılır.",
-    bodyEn: "Secure payment link is shared after project approval.",
+    bodyTr: "Checkout sayfasında güvenli ödeme akışı tamamlanır.",
+    bodyEn: "Secure payment is completed through the checkout flow.",
   },
   {
     icon: ClipboardCheck,
@@ -146,6 +104,29 @@ const processSteps = [
     titleEn: "Start Development",
     bodyTr: "Teslim planı ile geliştirme sürecine geçiyoruz.",
     bodyEn: "We move into development with a delivery plan.",
+  },
+];
+
+const trustItems = [
+  {
+    icon: ShieldCheck,
+    title: "Secure payments",
+    body: "Satın alma akışı güvenli ödeme altyapısına hazır şekilde yapılandırılır.",
+  },
+  {
+    icon: FileCheck2,
+    title: "Contract-based development",
+    body: "Teslim kapsamı, zaman planı ve sorumluluklar sözleşme ile netleştirilir.",
+  },
+  {
+    icon: Receipt,
+    title: "Invoice issued for every purchase",
+    body: "Her satın alma için şirket bilgileriyle fatura düzenlenir.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Project kickoff after payment",
+    body: "Ödeme sonrası kickoff toplantısı ve teslim planı başlatılır.",
   },
 ];
 
@@ -332,7 +313,7 @@ export default function Home() {
 
                   <div className="grid gap-2.5">
                     {services.map((service) => {
-                    const Icon = service.icon;
+                    const Icon = serviceIcons[service.icon];
                     return (
                       <div
                         key={service.titleEn}
@@ -379,7 +360,7 @@ export default function Home() {
 
           <div className="mt-7 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {services.map((service) => {
-              const Icon = service.icon;
+              const Icon = serviceIcons[service.icon];
               return (
                 <article
                   key={service.titleEn}
@@ -394,20 +375,52 @@ export default function Home() {
                     {service.titleEn}
                   </p>
                   <p className="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-800">
-                    {service.price}
+                    Starting Price:
+                    <span className="mt-1 block text-base">{service.priceLabel}</span>
                   </p>
                   <div className="mt-4 flex flex-1 flex-col gap-3">
-                    <p className="text-sm leading-6 text-slate-600">{service.bodyTr}</p>
-                    <p className="text-sm leading-6 text-slate-500">{service.bodyEn}</p>
+                    <p className="text-sm leading-6 text-slate-600">{service.summaryTr}</p>
+                    <p className="text-sm leading-6 text-slate-500">{service.summaryEn}</p>
                   </div>
-                  <ServiceQuoteLink
-                    service={service.titleEn}
-                    className="mx-auto mt-5 inline-flex h-12 w-fit max-w-[70%] min-w-32 items-center justify-center gap-2 whitespace-nowrap rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-                  >
-                    Teklif Al
-                    <ArrowRight size={16} aria-hidden="true" />
-                  </ServiceQuoteLink>
+                  <div className="mt-5 grid gap-2">
+                    <a
+                      href={`/services/${service.slug}`}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-bold text-slate-950 shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-300"
+                    >
+                      View Details
+                    </a>
+                    <a
+                      href={`/checkout?service=${service.slug}`}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                    >
+                      Satın Al
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </a>
+                  </div>
                 </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative bg-[linear-gradient(180deg,#edf3f7_0%,#f8fafc_100%)] py-14 text-slate-950 sm:py-16">
+        <div className="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {trustItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-xl border border-white bg-white/75 p-5 shadow-xl shadow-slate-300/25 backdrop-blur"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-slate-950 text-white">
+                    <Icon size={20} aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-4 text-base font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">{item.body}</p>
+                </div>
               );
             })}
           </div>
