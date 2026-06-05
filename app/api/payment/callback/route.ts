@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import {
   IyzicoConfigError,
-  createPaymentVerificationSignature,
   isPaidCheckout,
   verifyCheckoutForm,
 } from "../iyzico";
@@ -152,8 +151,6 @@ async function handlePaymentCallback(request: Request) {
     const result = await verifyCheckoutForm(token);
 
     if (isPaidCheckout(result)) {
-      const verification = createPaymentVerificationSignature(token);
-
       console.log("PAYMENT VERIFIED", {
         paymentId: result.paymentId,
         conversationId: result.conversationId,
@@ -161,7 +158,7 @@ async function handlePaymentCallback(request: Request) {
         paymentStatus: result.paymentStatus,
       });
 
-      return redirectUser(request, "/payment-success", { token, verification });
+      return redirectUser(request, "/payment-success", { token });
     }
 
     console.log("PAYMENT FAILED", {

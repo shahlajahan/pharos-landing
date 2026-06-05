@@ -1,4 +1,4 @@
-import { createHmac, randomUUID, timingSafeEqual } from "crypto";
+import { randomUUID } from "crypto";
 import { company, siteUrl } from "../../company";
 
 type IyzicoResult = {
@@ -25,35 +25,39 @@ type IyzicoConfig = {
 type IyzicoClient = {
   checkoutFormInitialize: {
     create: (
-      request: Record<string, unknown>,
+      request: object,
       callback: (error: unknown, result: IyzicoResult) => void
     ) => void;
   };
   checkoutForm: {
     retrieve: (
-      request: Record<string, unknown>,
+      request: object,
       callback: (error: unknown, result: IyzicoResult) => void
     ) => void;
   };
 };
 
-type CheckoutFormInitializeResource = IyzicoClient["checkoutFormInitialize"];
-type CheckoutFormResource = IyzicoClient["checkoutForm"];
-type IyzicoResourceConstructor<TResource> = new (
-  config: IyzicoConfig
-) => TResource;
+type IyzicoConstructor = {
+  new (config: IyzicoConfig): IyzicoClient;
+  LOCALE: {
+    TR: string;
+  };
+  CURRENCY: {
+    TRY: string;
+  };
+  PAYMENT_GROUP: {
+    PRODUCT: string;
+  };
+  BASKET_ITEM_TYPE: {
+    VIRTUAL: string;
+  };
+};
 
 // The iyzipay package is CommonJS and does not ship TypeScript definitions.
-// Import only the resources this app uses. The top-level iyzipay constructor
-// scans lib/resources at runtime, which is brittle in Vercel serverless bundles.
+// Use the official top-level SDK constructor so request signing, URI
+// normalization, and resource initialization stay inside the SDK.
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const CheckoutFormInitialize = require("iyzipay/lib/resources/CheckoutFormInitialize") as IyzicoResourceConstructor<
-  CheckoutFormInitializeResource
->;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const CheckoutForm = require("iyzipay/lib/resources/CheckoutForm") as IyzicoResourceConstructor<
-  CheckoutFormResource
->;
+const Iyzipay = require("iyzipay") as IyzicoConstructor;
 
 export class IyzicoConfigError extends Error {
   constructor() {
@@ -77,10 +81,57 @@ export type PaymentService = {
   price: number;
 };
 
-const locale = "tr";
-const currency = "TRY";
-const paymentGroup = "PRODUCT";
-const basketItemType = "VIRTUAL";
+type CheckoutInitializeRequest = {
+  locale: string;
+  conversationId: string;
+  price: string;
+  paidPrice: string;
+  currency: string;
+  basketId: string;
+  paymentGroup: string;
+  callbackUrl: string;
+  enabledInstallments: number[];
+  buyer: {
+    id: string;
+    name: string;
+    surname: string;
+    gsmNumber: string;
+    email: string;
+    identityNumber: string;
+    registrationAddress: string;
+    ip: string;
+    city: string;
+    country: string;
+    zipCode: string;
+  };
+  shippingAddress: {
+    contactName: string;
+    city: string;
+    country: string;
+    address: string;
+    zipCode: string;
+  };
+  billingAddress: {
+    contactName: string;
+    city: string;
+    country: string;
+    address: string;
+    zipCode: string;
+  };
+  basketItems: {
+    id: string;
+    name: string;
+    category1: string;
+    category2: string;
+    itemType: string;
+    price: string;
+  }[];
+};
+
+const locale = Iyzipay.LOCALE.TR;
+const currency = Iyzipay.CURRENCY.TRY;
+const paymentGroup = Iyzipay.PAYMENT_GROUP.PRODUCT;
+const basketItemType = Iyzipay.BASKET_ITEM_TYPE.VIRTUAL;
 
 function getRequiredIyzicoConfig() {
   const uri = process.env.IYZICO_BASE_URL?.trim();
@@ -98,13 +149,14 @@ function getRequiredIyzicoConfig() {
   };
 }
 
-function getIyzicoClient(): IyzicoClient {
-  const config = getRequiredIyzicoConfig();
+function getIyzicoClient(config = getRequiredIyzicoConfig()): IyzicoClient {
+  const { apiKey, secretKey, uri } = config;
 
-  return {
-    checkoutFormInitialize: new CheckoutFormInitialize(config),
-    checkoutForm: new CheckoutForm(config),
-  };
+  return new Iyzipay({
+    apiKey,
+    secretKey,
+    uri,
+  });
 }
 
 export function getPublicBaseUrl(request: Request) {
@@ -116,27 +168,6 @@ export function getPublicBaseUrl(request: Request) {
 
 export function getPaymentCallbackUrl(baseUrl: string) {
   return `${baseUrl.replace(/\/$/, "")}/api/payment/callback`;
-}
-
-export function createPaymentVerificationSignature(token: string) {
-  const { secretKey } = getRequiredIyzicoConfig();
-
-  return createHmac("sha256", secretKey).update(token).digest("hex");
-}
-
-export function isPaymentVerificationSignatureValid(
-  token: string,
-  signature: string
-) {
-  const expectedSignature = createPaymentVerificationSignature(token);
-  const expectedBuffer = Buffer.from(expectedSignature, "hex");
-  const receivedBuffer = Buffer.from(signature, "hex");
-
-  if (expectedBuffer.length !== receivedBuffer.length) {
-    return false;
-  }
-
-  return timingSafeEqual(expectedBuffer, receivedBuffer);
 }
 
 export function formatIyzicoPrice(price: number) {
@@ -183,6 +214,56 @@ function iyzicoRequest<T>(
   });
 }
 
+function logCheckoutInitializeFailure({
+  checkoutRequest,
+  config,
+  error,
+  result,
+}: {
+  checkoutRequest: CheckoutInitializeRequest;
+  config: IyzicoConfig;
+  error?: unknown;
+  result?: IyzicoResult;
+}) {
+  const failureLog = {
+    sdkConstructor: "new Iyzipay({ apiKey, secretKey, uri })",
+    sdkCall: "iyzipay.checkoutFormInitialize.create(checkoutRequest, callback)",
+    config: {
+      uri: config.uri,
+      apiKeyLoaded: Boolean(config.apiKey),
+      secretKeyLoaded: Boolean(config.secretKey),
+      apiKeyLength: config.apiKey.length,
+      secretKeyLength: config.secretKey.length,
+      apiKeyStartsSandbox: config.apiKey.startsWith("sandbox-"),
+      secretKeyStartsSandbox: config.secretKey.startsWith("sandbox-"),
+    },
+    payloadTypes: {
+      price: typeof checkoutRequest.price,
+      paidPrice: typeof checkoutRequest.paidPrice,
+      basketItemPrices: checkoutRequest.basketItems.map((basketItem) => ({
+        id: basketItem.id,
+        price: typeof basketItem.price,
+      })),
+    },
+    checkoutRequest,
+    iyzicoResult: result
+      ? {
+          status: result.status,
+          errorMessage: result.errorMessage,
+          conversationId: result.conversationId,
+          tokenReceived: Boolean(result.token),
+        }
+      : undefined,
+    sdkError:
+      error instanceof Error ? error.message : error ? String(error) : undefined,
+  };
+
+  console.error(
+    "IYZICO CHECKOUT INITIALIZE FAILURE",
+    JSON.stringify(failureLog, null, 2)
+  );
+}
+
 export async function createCheckoutForm({
   buyer,
   service,
@@ -192,7 +273,8 @@ export async function createCheckoutForm({
   service: PaymentService;
   request: Request;
 }) {
-  const iyzipay = getIyzicoClient();
+  const config = getRequiredIyzicoConfig();
+  const iyzipay = getIyzicoClient(config);
   const baseUrl = getPublicBaseUrl(request);
   const price = formatIyzicoPrice(service.price);
   const conversationId = randomUUID();
@@ -200,7 +282,7 @@ export async function createCheckoutForm({
   const billingAddress = normalizeAddress(buyer.billingAddress);
   const contactName = buyer.company?.trim() || buyer.name.trim() || company.name;
 
-  const checkoutRequest = {
+  const checkoutRequest: CheckoutInitializeRequest = {
     locale,
     conversationId,
     price,
@@ -215,7 +297,7 @@ export async function createCheckoutForm({
       name,
       surname,
       gsmNumber: normalizePhone(buyer.phone),
-      email: buyer.email,
+      email: buyer.email.trim(),
       identityNumber: "11111111111",
       registrationAddress: billingAddress,
       ip: buyer.ip,
@@ -249,9 +331,20 @@ export async function createCheckoutForm({
     ],
   };
 
-  return iyzicoRequest<IyzicoResult>((callback) => {
-    iyzipay.checkoutFormInitialize.create(checkoutRequest, callback);
-  });
+  try {
+    const result = await iyzicoRequest<IyzicoResult>((callback) => {
+      iyzipay.checkoutFormInitialize.create(checkoutRequest, callback);
+    });
+
+    if (result.status !== "success") {
+      logCheckoutInitializeFailure({ checkoutRequest, config, result });
+    }
+
+    return result;
+  } catch (error) {
+    logCheckoutInitializeFailure({ checkoutRequest, config, error });
+    throw error;
+  }
 }
 
 export async function verifyCheckoutForm(token: string) {
