@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto";
+import { createHmac, randomUUID } from "crypto";
 import { company, siteUrl } from "../../company";
 
 type IyzicoResult = {
@@ -11,9 +11,10 @@ type IyzicoResult = {
   paymentStatus?: string;
   paymentId?: string;
   conversationId?: string;
-  price?: string;
-  paidPrice?: string;
+  price?: string | number;
+  paidPrice?: string | number;
   currency?: string;
+  [key: string]: unknown;
 };
 
 type IyzicoConfig = {
@@ -21,43 +22,6 @@ type IyzicoConfig = {
   apiKey: string;
   secretKey: string;
 };
-
-type IyzicoClient = {
-  checkoutFormInitialize: {
-    create: (
-      request: object,
-      callback: (error: unknown, result: IyzicoResult) => void
-    ) => void;
-  };
-  checkoutForm: {
-    retrieve: (
-      request: object,
-      callback: (error: unknown, result: IyzicoResult) => void
-    ) => void;
-  };
-};
-
-type IyzicoConstructor = {
-  new (config: IyzicoConfig): IyzicoClient;
-  LOCALE: {
-    TR: string;
-  };
-  CURRENCY: {
-    TRY: string;
-  };
-  PAYMENT_GROUP: {
-    PRODUCT: string;
-  };
-  BASKET_ITEM_TYPE: {
-    VIRTUAL: string;
-  };
-};
-
-// The iyzipay package is CommonJS and does not ship TypeScript definitions.
-// Use the official top-level SDK constructor so request signing, URI
-// normalization, and resource initialization stay inside the SDK.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const Iyzipay = require("iyzipay") as IyzicoConstructor;
 
 export class IyzicoConfigError extends Error {
   constructor() {
@@ -128,10 +92,14 @@ type CheckoutInitializeRequest = {
   }[];
 };
 
-const locale = Iyzipay.LOCALE.TR;
-const currency = Iyzipay.CURRENCY.TRY;
-const paymentGroup = Iyzipay.PAYMENT_GROUP.PRODUCT;
-const basketItemType = Iyzipay.BASKET_ITEM_TYPE.VIRTUAL;
+const locale = "tr";
+const currency = "TRY";
+const paymentGroup = "PRODUCT";
+const basketItemType = "VIRTUAL";
+
+const checkoutFormInitializePath =
+  "/payment/iyzipos/checkoutform/initialize/auth/ecom";
+const checkoutFormRetrievePath = "/payment/iyzipos/checkoutform/auth/ecom/detail";
 
 function getRequiredIyzicoConfig() {
   const uri = process.env.IYZICO_BASE_URL?.trim();
@@ -147,16 +115,6 @@ function getRequiredIyzicoConfig() {
     apiKey,
     secretKey,
   };
-}
-
-function getIyzicoClient(config = getRequiredIyzicoConfig()): IyzicoClient {
-  const { apiKey, secretKey, uri } = config;
-
-  return new Iyzipay({
-    apiKey,
-    secretKey,
-    uri,
-  });
 }
 
 export function getPublicBaseUrl(request: Request) {
@@ -199,19 +157,68 @@ function extractCity(address: string) {
   return "Istanbul";
 }
 
-function iyzicoRequest<T>(
-  executor: (callback: (error: unknown, result: T) => void) => void
-) {
-  return new Promise<T>((resolve, reject) => {
-    executor((error, result) => {
-      if (error) {
-        reject(error);
-        return;
-      }
+function normalizeIyzicoBaseUrl(uri: string) {
+  return uri.replace(/\/$/, "");
+}
 
-      resolve(result);
-    });
+function createRandomKey() {
+  return `${Date.now()}${randomUUID().replace(/-/g, "")}`;
+}
+
+function createAuthorizationHeader({
+  apiKey,
+  body,
+  path,
+  randomKey,
+  secretKey,
+}: {
+  apiKey: string;
+  body: string;
+  path: string;
+  randomKey: string;
+  secretKey: string;
+}) {
+  const signature = createHmac("sha256", secretKey)
+    .update(`${randomKey}${path}${body}`)
+    .digest("hex");
+  const authorizationString = `apiKey:${apiKey}&randomKey:${randomKey}&signature:${signature}`;
+  const encodedAuthorization = Buffer.from(authorizationString, "utf8").toString(
+    "base64"
+  );
+
+  return `IYZWSv2 ${encodedAuthorization}`;
+}
+
+async function postIyzico(path: string, payload: object, config: IyzicoConfig) {
+  const body = JSON.stringify(payload);
+  const randomKey = createRandomKey();
+  const response = await fetch(`${normalizeIyzicoBaseUrl(config.uri)}${path}`, {
+    method: "POST",
+    headers: {
+      Authorization: createAuthorizationHeader({
+        apiKey: config.apiKey,
+        body,
+        path,
+        randomKey,
+        secretKey: config.secretKey,
+      }),
+      "Content-Type": "application/json",
+      "x-iyzi-rnd": randomKey,
+    },
+    body,
   });
+
+  const responseText = await response.text();
+  const result = responseText
+    ? (JSON.parse(responseText) as IyzicoResult)
+    : ({ status: response.ok ? "success" : "failure" } as IyzicoResult);
+
+  if (!response.ok && !result.errorMessage) {
+    result.status = result.status ?? "failure";
+    result.errorMessage = `iyzico API request failed with HTTP ${response.status}`;
+  }
+
+  return result;
 }
 
 function logCheckoutInitializeFailure({
@@ -226,8 +233,7 @@ function logCheckoutInitializeFailure({
   result?: IyzicoResult;
 }) {
   const failureLog = {
-    sdkConstructor: "new Iyzipay({ apiKey, secretKey, uri })",
-    sdkCall: "iyzipay.checkoutFormInitialize.create(checkoutRequest, callback)",
+    apiCall: `POST ${checkoutFormInitializePath}`,
     config: {
       uri: config.uri,
       apiKeyLoaded: Boolean(config.apiKey),
@@ -254,7 +260,7 @@ function logCheckoutInitializeFailure({
           tokenReceived: Boolean(result.token),
         }
       : undefined,
-    sdkError:
+    apiError:
       error instanceof Error ? error.message : error ? String(error) : undefined,
   };
 
@@ -274,7 +280,6 @@ export async function createCheckoutForm({
   request: Request;
 }) {
   const config = getRequiredIyzicoConfig();
-  const iyzipay = getIyzicoClient(config);
   const baseUrl = getPublicBaseUrl(request);
   const price = formatIyzicoPrice(service.price);
   const conversationId = randomUUID();
@@ -332,9 +337,11 @@ export async function createCheckoutForm({
   };
 
   try {
-    const result = await iyzicoRequest<IyzicoResult>((callback) => {
-      iyzipay.checkoutFormInitialize.create(checkoutRequest, callback);
-    });
+    const result = await postIyzico(
+      checkoutFormInitializePath,
+      checkoutRequest,
+      config
+    );
 
     if (result.status !== "success") {
       logCheckoutInitializeFailure({ checkoutRequest, config, result });
@@ -348,18 +355,17 @@ export async function createCheckoutForm({
 }
 
 export async function verifyCheckoutForm(token: string) {
-  const iyzipay = getIyzicoClient();
+  const config = getRequiredIyzicoConfig();
 
-  return iyzicoRequest<IyzicoResult>((callback) => {
-    iyzipay.checkoutForm.retrieve(
-      {
-        locale,
-        conversationId: randomUUID(),
-        token,
-      },
-      callback
-    );
-  });
+  return postIyzico(
+    checkoutFormRetrievePath,
+    {
+      locale,
+      conversationId: randomUUID(),
+      token,
+    },
+    config
+  );
 }
 
 export function isPaidCheckout(result: IyzicoResult) {
