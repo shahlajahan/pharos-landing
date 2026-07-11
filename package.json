@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "firebase-admin": "^13.10.0",
+    "iyzipay": "^2.0.69",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",
