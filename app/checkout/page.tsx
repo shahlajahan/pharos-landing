@@ -55,25 +55,6 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
             Seçilen hizmet, sabit başlangıç fiyatı, müşteri bilgileri, sipariş özeti ve iyzico ödeme entegrasyonu için hazır alanlar aşağıda gösterilir.
           </p>
 
-          {isSandbox && (
-            <div className="
-              mt-6
-              inline-flex
-              items-center
-              gap-2
-              rounded-full
-              border border-yellow-500/30
-              bg-yellow-500/10
-              px-4
-              py-2
-              text-sm
-              font-semibold
-              text-yellow-300
-            ">
-              ⚠ SANDBOX PAYMENT MODE
-            </div>
-          )}
-
           <CheckoutForm selectedService={selectedService} />
 
         </div>

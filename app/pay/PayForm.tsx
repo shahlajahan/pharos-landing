@@ -3,11 +3,16 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { CreditCard, LockKeyhole, ShieldCheck } from "lucide-react";
-import type { CustomerType } from "@/lib/payment/types";
-import type { Service } from "../services";
+import type { CustomerType, PaymentType } from "@/lib/payment/types";
 
-type CheckoutFormProps = {
-  selectedService: Service;
+type PayFormProps = {
+  paymentType: PaymentType;
+  serviceSlug?: string;
+  referenceId?: string;
+  title: string;
+  description?: string;
+  priceLabel: string;
+  typeLabel: string;
 };
 
 type PaymentInitializeResponse = {
@@ -39,7 +44,15 @@ const IDENTITY_FIELD_CONFIG: Record<
   },
 };
 
-export function CheckoutForm({ selectedService }: CheckoutFormProps) {
+export function PayForm({
+  paymentType,
+  serviceSlug,
+  referenceId,
+  title,
+  description,
+  priceLabel,
+  typeLabel,
+}: PayFormProps) {
   const checkoutContentRef = useRef<HTMLDivElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -59,9 +72,9 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
     // <script> tag that must execute to render the payment form — this is
     // iyzico's own documented embedded-checkout integration pattern, not
     // arbitrary third-party content. The response comes from our own
-    // server-to-server, HMAC-authenticated call to iyzico (never from
-    // user input), and only ever reaches the submitting customer's own
-    // browser in direct response to their own request.
+    // server-to-server, HMAC-authenticated call to iyzico (never from user
+    // input), and only ever reaches the submitting customer's own browser
+    // in direct response to their own request.
     container.innerHTML = checkoutFormContent;
     const scripts = Array.from(container.querySelectorAll("script"));
 
@@ -89,7 +102,6 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
 
     const formData = new FormData(event.currentTarget);
     const identityNumber = String(formData.get("identityNumber") ?? "").trim();
-    const company = String(formData.get("company") ?? "").trim();
 
     const response = await fetch("/api/payment/initialize", {
       method: "POST",
@@ -97,8 +109,9 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        paymentType: "service",
-        serviceSlug: selectedService.slug,
+        paymentType,
+        ...(serviceSlug ? { serviceSlug } : {}),
+        ...(referenceId ? { referenceId } : {}),
         customer: {
           customerType,
           firstName: String(formData.get("firstName") ?? ""),
@@ -111,7 +124,6 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
           zipCode: String(formData.get("zipCode") ?? ""),
           identityNumber,
         },
-        ...(company ? { metadata: { company } } : {}),
       }),
     });
 
@@ -215,17 +227,6 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
           </label>
           <label className="grid gap-2">
             <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-              Şirket / Company <span className="normal-case text-slate-500">(opsiyonel)</span>
-            </span>
-            <input
-              name="company"
-              autoComplete="organization"
-              className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
-              placeholder="Şirket ünvanı"
-            />
-          </label>
-          <label className="grid gap-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
               {identityField.label}
             </span>
             <input
@@ -291,21 +292,13 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
       <aside className="rounded-2xl border border-white/14 bg-white/10 p-6 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-8">
         <h2 className="text-xl font-semibold text-white">Order summary</h2>
         <div className="mt-6 rounded-xl border border-white/10 bg-white/[0.07] p-5">
-          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-            Selected service
-          </p>
-          <p className="mt-2 text-lg font-semibold text-white">{selectedService.titleEn}</p>
-          <p className="mt-1 text-sm text-slate-400">{selectedService.titleTr}</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">{typeLabel}</p>
+          <p className="mt-2 text-lg font-semibold text-white">{title}</p>
+          {description ? <p className="mt-1 text-sm text-slate-400">{description}</p> : null}
         </div>
         <div className="mt-4 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-5">
-          <p className="text-sm font-semibold text-emerald-100">Price</p>
-          <p className="mt-2 text-4xl font-semibold text-white">{selectedService.priceLabel}</p>
-        </div>
-        <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.07] p-5">
-          <p className="text-sm font-semibold text-slate-200">Delivery process</p>
-          <p className="mt-2 text-sm leading-6 text-slate-400">
-            Ödeme sonrası sözleşme, fatura bilgileri ve kickoff planı tamamlanır. {selectedService.timeline}
-          </p>
+          <p className="text-sm font-semibold text-emerald-100">Tutar / Amount</p>
+          <p className="mt-2 text-4xl font-semibold text-white">{priceLabel}</p>
         </div>
 
         <section className="mt-6 rounded-xl border border-white/10 bg-white/[0.07] p-5">
@@ -354,7 +347,7 @@ export function CheckoutForm({ selectedService }: CheckoutFormProps) {
           className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
         >
           <CreditCard size={17} aria-hidden="true" />
-          {isSubmitting ? "Ödeme başlatılıyor" : "Satın Al"}
+          {isSubmitting ? "Ödeme başlatılıyor" : "Güvenli Ödeme Yap"}
         </button>
       </aside>
     </form>

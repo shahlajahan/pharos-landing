@@ -1,2 +1,2 @@
-export { initializeCheckoutForm } from "./iyzico";
-export { retrieveCheckoutForm } from "./iyzico";
+export { initializeCheckoutForm, retrieveCheckoutForm, isPaidCheckout } from "./iyzico";
+export type { IyzicoCheckoutInitializeRequest, IyzicoResult } from "./iyzico";

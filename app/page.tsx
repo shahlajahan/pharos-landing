@@ -8,6 +8,7 @@ import {
   ClipboardCheck,
   CreditCard,
   FileCheck2,
+  GitFork,
   Globe2,
   Menu,
   Phone,
@@ -18,6 +19,7 @@ import {
   ShieldCheck,
   Sparkles,
   Smartphone,
+  Terminal,
   ThumbsUp,
   Zap,
 } from "lucide-react";
@@ -132,9 +134,12 @@ const trustItems = [
 
 const navItems = [
   ["Hizmetler", "Services", "#services"],
+  ["Açık Kaynak", "Open Source", "/devclean"],
   ["Hakkımızda", "About", "#about"],
   ["İletişim", "Contact", "/contact"],
 ];
+
+const devcleanTags = ["Open Source", "macOS", "Bash", "Flutter", "Xcode"];
 
 export default function Home() {
   return (
@@ -400,6 +405,80 @@ export default function Home() {
                 </article>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      <section id="labs" className="relative bg-[#08111f] py-16 text-white sm:py-20">
+        <div className="hero-grid absolute inset-0 opacity-30" aria-hidden="true" />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+          <div className="max-w-3xl">
+            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
+              Pharos Labs / Open Source
+            </p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-normal sm:text-5xl">
+              Tools we build for developers.
+            </h2>
+            <p className="mt-3 text-base leading-7 text-slate-400">
+              Geliştiriciler için araçlar geliştiriyoruz.
+            </p>
+          </div>
+
+          <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_1fr]">
+            <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/14 bg-white/[0.07] p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl transition hover:border-emerald-300/30 hover:bg-white/[0.1] sm:p-8">
+              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
+                <Terminal size={22} aria-hidden="true" />
+              </div>
+              <h3 className="mt-6 text-2xl font-semibold text-white">devclean</h3>
+              <p className="mt-4 text-base leading-7 text-slate-300">
+                A safety-first macOS CLI for auditing developer disk usage, diagnosing development
+                environments, and cleaning recreatable caches.
+              </p>
+
+              <div className="mt-5 flex flex-wrap gap-2">
+                {devcleanTags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <div className="mt-6 flex flex-1 items-end gap-3">
+                <a
+                  href="/devclean"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                >
+                  View Product
+                  <ArrowRight size={16} aria-hidden="true" />
+                </a>
+                <a
+                  href="https://github.com/shahlajahan/devclean"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="devclean deposunu GitHub'da görüntüle"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/14 bg-white/6 px-4 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+                >
+                  <GitFork size={16} aria-hidden="true" />
+                  GitHub
+                </a>
+              </div>
+            </article>
+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+              <p className="text-sm font-semibold text-slate-200">Neden paylaşıyoruz?</p>
+              <p className="mt-3 text-sm leading-7 text-slate-400">
+                Açık kaynak araçlar, mühendislik yaklaşımımızın somut bir kanıtıdır: güvenlik önce gelir,
+                her işlem test edilir ve her sürüm belgelenir. Bu, ticari projelerimizde uyguladığımız
+                standartların aynısıdır.
+              </p>
+              <p className="mt-4 text-sm leading-7 text-slate-500">
+                Open-source tools are concrete evidence of our engineering standards — the same rigor we
+                apply to every client project.
+              </p>
+            </div>
           </div>
         </div>
       </section>

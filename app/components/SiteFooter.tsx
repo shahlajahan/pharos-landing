@@ -41,13 +41,15 @@ export function SiteFooter() {
               <h2 className="text-sm font-semibold text-slate-100">
                 Güvenli Ödeme Altyapısı
               </h2>
-              <Image
-                src="/payments/iyzico-logo-band-colored.svg"
-                alt="iyzico, Visa, Mastercard ve desteklenen güvenli ödeme yöntemleri"
-                width={429}
-                height={32}
-                className="h-8 w-full max-w-[429px] rounded-md bg-white object-contain object-center"
-              />
+              <div className="relative h-8 w-full max-w-[429px]">
+                <Image
+                  src="/payments/iyzico-logo-band-colored.svg"
+                  alt="iyzico, Visa, Mastercard ve desteklenen güvenli ödeme yöntemleri"
+                  fill
+                  sizes="429px"
+                  className="rounded-md bg-white object-contain object-center"
+                />
+              </div>
             </div>
           </section>
 

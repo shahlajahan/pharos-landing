@@ -1,199 +1,183 @@
-
 import { NextResponse } from "next/server";
-import { randomUUID } from "crypto";
-import { db } from "../../../../lib/firebase-admin";
 
-import {
-  IyzicoConfigError,
-  isPaidCheckout,
-  verifyCheckoutForm,
-} from "../iyzico";
+import { getClientIp } from "@/lib/payment/client-ip";
+import { retrieveAndFinalizePayment } from "@/lib/payment/engine";
+import { hashToken, logPaymentEvent } from "@/lib/payment/monitoring";
+import { isRateLimited } from "@/lib/payment/rate-limit";
+import { PaymentConfigError } from "@/lib/payment/types";
 
 export const runtime = "nodejs";
 
 type CallbackPayload = Record<string, string>;
+type SafeRedirectPath = "/payment-success" | "/payment-failed" | "/payment-pending";
 
-function toPayloadValue(value: unknown) {
-  if (value === null || value === undefined) {
-    return undefined;
-  }
+function toPayloadValue(value: unknown): string | undefined {
+    if (value === null || value === undefined) {
+        return undefined;
+    }
 
-  if (Array.isArray(value)) {
-    return toPayloadValue(value[0]);
-  }
+    if (Array.isArray(value)) {
+        return toPayloadValue(value[0]);
+    }
 
-  if (typeof value === "object") {
-    return undefined;
-  }
+    if (typeof value === "object") {
+        return undefined;
+    }
 
-  return String(value);
+    return String(value);
 }
 
 function addSearchParams(payload: CallbackPayload, searchParams: URLSearchParams) {
-  searchParams.forEach((value, key) => {
-    payload[key] = value;
-  });
+    searchParams.forEach((value, key) => {
+        payload[key] = value;
+    });
 }
 
-async function readCallbackPayload(request: Request) {
-  const payload: CallbackPayload = {};
-  const requestUrl = new URL(request.url);
+async function readCallbackPayload(request: Request): Promise<CallbackPayload> {
+    const payload: CallbackPayload = {};
+    const requestUrl = new URL(request.url);
 
-  addSearchParams(payload, requestUrl.searchParams);
+    addSearchParams(payload, requestUrl.searchParams);
 
-  if (request.method === "GET" || request.method === "HEAD") {
-    return payload;
-  }
-
-  const contentType = request.headers.get("content-type") ?? "";
-
-  try {
-    if (contentType.includes("application/json")) {
-      const body = (await request.json()) as Record<string, unknown>;
-
-      Object.entries(body).forEach(([key, value]) => {
-        const payloadValue = toPayloadValue(value);
-
-        if (payloadValue !== undefined) {
-          payload[key] = payloadValue;
-        }
-      });
-
-      return payload;
+    if (request.method === "GET" || request.method === "HEAD") {
+        return payload;
     }
 
-    if (
-      contentType.includes("application/x-www-form-urlencoded") ||
-      contentType.includes("multipart/form-data")
-    ) {
-      const formData = await request.formData();
-
-      formData.forEach((value, key) => {
-        if (typeof value === "string") {
-          payload[key] = value;
-        }
-      });
-
-      return payload;
-    }
-
-    const rawBody = await request.text();
-
-    if (!rawBody.trim()) {
-      return payload;
-    }
+    const contentType = request.headers.get("content-type") ?? "";
 
     try {
-      const body = JSON.parse(rawBody) as Record<string, unknown>;
+        if (contentType.includes("application/json")) {
+            const body = (await request.json()) as Record<string, unknown>;
 
-      Object.entries(body).forEach(([key, value]) => {
-        const payloadValue = toPayloadValue(value);
+            Object.entries(body).forEach(([key, value]) => {
+                const payloadValue = toPayloadValue(value);
 
-        if (payloadValue !== undefined) {
-          payload[key] = payloadValue;
+                if (payloadValue !== undefined) {
+                    payload[key] = payloadValue;
+                }
+            });
+
+            return payload;
         }
-      });
-    } catch {
-      addSearchParams(payload, new URLSearchParams(rawBody));
+
+        if (
+            contentType.includes("application/x-www-form-urlencoded") ||
+            contentType.includes("multipart/form-data")
+        ) {
+            const formData = await request.formData();
+
+            formData.forEach((value, key) => {
+                if (typeof value === "string") {
+                    payload[key] = value;
+                }
+            });
+
+            return payload;
+        }
+
+        const rawBody = await request.text();
+
+        if (!rawBody.trim()) {
+            return payload;
+        }
+
+        try {
+            const body = JSON.parse(rawBody) as Record<string, unknown>;
+
+            Object.entries(body).forEach(([key, value]) => {
+                const payloadValue = toPayloadValue(value);
+
+                if (payloadValue !== undefined) {
+                    payload[key] = payloadValue;
+                }
+            });
+        } catch {
+            addSearchParams(payload, new URLSearchParams(rawBody));
+        }
+    } catch (error) {
+        console.error("PAYMENT_CALLBACK_PAYLOAD_READ_FAILED", {
+            message: error instanceof Error ? error.message : String(error),
+        });
     }
-  } catch (error) {
-    console.log("PAYMENT FAILED", {
-      reason: "callback-payload-read-failed",
-      error: error instanceof Error ? error.message : "Unknown payload error",
+
+    return payload;
+}
+
+function getToken(payload: CallbackPayload): string {
+    return payload.token?.trim() || payload.paymentToken?.trim() || payload.checkoutFormToken?.trim() || "";
+}
+
+/** Only ever redirects to a fixed, literal internal path — never attacker-influenced, so no open redirect is possible. */
+function redirectToSafePath(
+    request: Request,
+    pathname: SafeRedirectPath,
+    params: Record<string, string | undefined>,
+) {
+    const destination = new URL(pathname, request.url);
+
+    Object.entries(params).forEach(([key, value]) => {
+        if (value) {
+            destination.searchParams.set(key, value);
+        }
     });
-  }
 
-  return payload;
-}
-
-function getToken(payload: CallbackPayload) {
-  return (
-    payload.token?.trim() ||
-    payload.paymentToken?.trim() ||
-    payload.checkoutFormToken?.trim() ||
-    ""
-  );
-}
-
-function redirectUser(request: Request, pathname: string, params?: CallbackPayload) {
-  const destination = new URL(pathname, request.url);
-
-  Object.entries(params ?? {}).forEach(([key, value]) => {
-    if (value) {
-      destination.searchParams.set(key, value);
-    }
-  });
-
-  console.log("REDIRECTING USER", {
-    destination: `${destination.pathname}${destination.search}`,
-  });
-
-  return NextResponse.redirect(destination, { status: 303 });
+    return NextResponse.redirect(destination, { status: 303 });
 }
 
 async function handlePaymentCallback(request: Request) {
-  const payload = await readCallbackPayload(request);
-  const token = getToken(payload);
+    const payload = await readCallbackPayload(request);
+    const token = getToken(payload);
+    const clientIp = getClientIp(request);
 
-  console.log("PAYMENT CALLBACK RECEIVED", {
-    method: request.method,
-    hasToken: Boolean(token),
-    payloadKeys: Object.keys(payload),
-  });
-
-  if (!token) {
-    console.log("PAYMENT FAILED", {
-      reason: "missing-token",
+    logPaymentEvent("PAYMENT_CALLBACK_RECEIVED", {
+        method: request.method,
+        hasToken: Boolean(token),
+        tokenHash: token ? hashToken(token) : undefined,
     });
 
-    return redirectUser(request, "/payment-failed", {
-      reason: "missing-token",
+    const rateLimit = await isRateLimited({
+        key: `callback:${token ? hashToken(token) : clientIp}`,
+        limit: 20,
+        windowSeconds: 60,
+        event: "callback",
     });
-  }
 
-  try {
-    const result = await verifyCheckoutForm(token);
-
-    if (isPaidCheckout(result)) {
-      console.log("PAYMENT VERIFIED", {
-        paymentId: result.paymentId,
-        conversationId: result.conversationId,
-        status: result.status,
-        paymentStatus: result.paymentStatus,
-      });
-
-      return redirectUser(request, "/payment-success", { token });
+    if (!rateLimit.allowed) {
+        return NextResponse.json({ error: "Too many requests." }, { status: 429 });
     }
 
-    console.log("PAYMENT FAILED", {
-      reason: "verification-failed",
-      status: result.status,
-      paymentStatus: result.paymentStatus,
-      error: result.errorMessage,
-    });
+    try {
+        const finalized = await retrieveAndFinalizePayment(token);
+        const ref = finalized.referenceId ?? finalized.conversationId;
 
-    return redirectUser(request, "/payment-failed", {
-      reason: "verification-failed",
-    });
-  } catch (error) {
-    const reason =
-      error instanceof IyzicoConfigError
-        ? "iyzico-config-missing"
-        : "verification-error";
+        if (finalized.outcome === "paid") {
+            logPaymentEvent("PAYMENT_CALLBACK_RECEIVED", { outcome: "paid", conversationId: finalized.conversationId });
+            return redirectToSafePath(request, "/payment-success", { ref });
+        }
 
-    console.log("PAYMENT FAILED", {
-      reason,
-      error: error instanceof Error ? error.message : "Payment verification failed",
-    });
+        if (finalized.outcome === "pending_verification") {
+            console.log("PAYMENT_PENDING", { reason: finalized.reason, conversationId: finalized.conversationId });
+            return redirectToSafePath(request, "/payment-pending", { ref });
+        }
 
-    return redirectUser(request, "/payment-failed", { reason });
-  }
+        console.log("PAYMENT_FAILED", { reason: finalized.reason, conversationId: finalized.conversationId });
+        return redirectToSafePath(request, "/payment-failed", { ref, reason: finalized.reason });
+    } catch (error) {
+        const reason = error instanceof PaymentConfigError ? "provider-config-error" : "verification-error";
+
+        console.error("PAYMENT_CALLBACK_FAILED", {
+            reason,
+            message: error instanceof Error ? error.message : String(error),
+        });
+
+        return redirectToSafePath(request, "/payment-failed", { reason });
+    }
 }
 
 export async function GET(request: Request) {
-  return handlePaymentCallback(request);
+    return handlePaymentCallback(request);
 }
 
 export async function POST(request: Request) {
-  return handlePaymentCallback(request);
+    return handlePaymentCallback(request);
 }

@@ -1,14 +1,112 @@
 import admin from "firebase-admin";
+import { existsSync, readFileSync } from "fs";
+import { homedir } from "os";
+import { join } from "path";
 
-if (!admin.apps.length) {
+let initError: Error | null = null;
 
-    admin.initializeApp({
+function getDefaultAdcPath(): string | null {
+    if (process.platform === "win32") {
+        return process.env.APPDATA ? join(process.env.APPDATA, "gcloud", "application_default_credentials.json") : null;
+    }
 
-        credential:
-            admin.credential.applicationDefault(),
-
-    });
-
+    return join(homedir(), ".config", "gcloud", "application_default_credentials.json");
 }
 
-export const db = admin.firestore();
+function readCredentialFileType(path: string): string | null {
+    try {
+        const parsed = JSON.parse(readFileSync(path, "utf8")) as { type?: string };
+        return typeof parsed.type === "string" ? parsed.type : null;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Best-effort, secret-free description of which credential applicationDefault()
+ * will actually use — reads only the non-secret "type" field of a credential
+ * file, never its contents. For the startup log only; never used for
+ * authorization decisions.
+ */
+function describeCredentialSource(): string {
+    const explicitPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+    if (explicitPath) {
+        const type = existsSync(explicitPath) ? readCredentialFileType(explicitPath) : null;
+        return type ? `${type} (GOOGLE_APPLICATION_CREDENTIALS)` : "GOOGLE_APPLICATION_CREDENTIALS (unreadable)";
+    }
+
+    const adcPath = getDefaultAdcPath();
+
+    if (adcPath && existsSync(adcPath)) {
+        const type = readCredentialFileType(adcPath);
+        return type ? `${type} (gcloud application-default login)` : "gcloud ADC file (unknown type)";
+    }
+
+    return "metadata server / workload identity (implicit compute credentials)";
+}
+
+if (!admin.apps.length) {
+    const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+
+    if (!projectId) {
+        // Fail fast: never fall back to whatever project the ambient
+        // credential/gcloud CLI happens to be scoped to (see memory:
+        // firestore-graceful-degradation — this was a real incident where
+        // payments were silently persisted to an unrelated GCP project).
+        initError = new Error(
+            "FIREBASE_PROJECT_ID is not set. Refusing to initialize Firebase Admin against an implicit/ambient GCP project.",
+        );
+    } else {
+        try {
+            // applicationDefault() still supplies the credential — a service
+            // account via GOOGLE_APPLICATION_CREDENTIALS in production, a
+            // developer's `gcloud auth application-default login` locally,
+            // or compute metadata credentials on GCP infrastructure. The
+            // explicit projectId below always wins over whatever project
+            // that credential would otherwise resolve to.
+            admin.initializeApp({
+                credential: admin.credential.applicationDefault(),
+                projectId,
+            });
+
+            const db = admin.firestore();
+
+            console.log("FIREBASE_ADMIN_INITIALIZED", {
+                projectId,
+                credentialSource: describeCredentialSource(),
+                firestoreDatabase: db.databaseId,
+            });
+        } catch (error) {
+            initError = error instanceof Error ? error : new Error(String(error));
+        }
+    }
+
+    if (initError) {
+        console.error("FIREBASE_ADMIN_INIT_FAILED", { message: initError.message });
+    }
+}
+
+/**
+ * Returns a Firestore handle, or null if Firebase Admin could not be
+ * initialized (e.g. missing FIREBASE_PROJECT_ID or credentials). Callers
+ * must treat Firestore as a best-effort persistence layer, never as the
+ * source of truth for payment authorization — see lib/payment/repository.ts.
+ */
+export function getFirestoreDb(): admin.firestore.Firestore | null {
+    if (initError) {
+        console.error("FIREBASE_ADMIN_INIT_FAILED", { message: initError.message });
+        return null;
+    }
+
+    try {
+        return admin.firestore();
+    } catch (error) {
+        console.error("FIREBASE_ADMIN_FIRESTORE_UNAVAILABLE", {
+            message: error instanceof Error ? error.message : String(error),
+        });
+        return null;
+    }
+}
+
+export { admin };

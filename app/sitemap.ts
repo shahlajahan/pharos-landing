@@ -16,6 +16,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly" as const,
       priority: 0.7,
     },
+    {
+      url: `${siteUrl}/devclean`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
     ...legalRoutes.map((route) => ({
       url: `${siteUrl}${route.path}`,
       lastModified,
