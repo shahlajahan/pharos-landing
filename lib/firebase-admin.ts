@@ -48,6 +48,8 @@ function describeCredentialSource(): string {
 
 if (!admin.apps.length) {
     const projectId = process.env.FIREBASE_PROJECT_ID?.trim();
+    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL?.trim();
+    const rawPrivateKey = process.env.FIREBASE_PRIVATE_KEY;
 
     if (!projectId) {
         // Fail fast: never fall back to whatever project the ambient
@@ -59,14 +61,41 @@ if (!admin.apps.length) {
         );
     } else {
         try {
-            // applicationDefault() still supplies the credential — a service
-            // account via GOOGLE_APPLICATION_CREDENTIALS in production, a
-            // developer's `gcloud auth application-default login` locally,
-            // or compute metadata credentials on GCP infrastructure. The
-            // explicit projectId below always wins over whatever project
-            // that credential would otherwise resolve to.
+            let credential: admin.credential.Credential;
+            let credentialSource: string;
+
+            if (clientEmail && rawPrivateKey) {
+                // Prefer an explicit service account whenever one is fully
+                // configured — this gives the Firestore client a real,
+                // directly-usable credential instead of deferring to
+                // applicationDefault()'s lazy, environment-dependent ADC
+                // discovery (which has no metadata server to find on
+                // non-GCP hosts like Vercel — see prior investigation).
+                credential = admin.credential.cert({
+                    projectId,
+                    clientEmail,
+                    // Env vars can't carry real newlines — service-account
+                    // private keys are commonly stored with literal "\n"
+                    // sequences that must be restored before the PEM key
+                    // can be parsed.
+                    privateKey: rawPrivateKey.replace(/\\n/g, "\n"),
+                });
+                credentialSource = "service-account (FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY)";
+            } else {
+                // Falls back to applicationDefault() only when a full
+                // service account isn't configured — a service account via
+                // GOOGLE_APPLICATION_CREDENTIALS in production, a
+                // developer's `gcloud auth application-default login`
+                // locally, or compute metadata credentials on GCP
+                // infrastructure. The explicit projectId below always wins
+                // over whatever project that credential would otherwise
+                // resolve to.
+                credential = admin.credential.applicationDefault();
+                credentialSource = describeCredentialSource();
+            }
+
             admin.initializeApp({
-                credential: admin.credential.applicationDefault(),
+                credential,
                 projectId,
             });
 
@@ -74,7 +103,7 @@ if (!admin.apps.length) {
 
             console.log("FIREBASE_ADMIN_INITIALIZED", {
                 projectId,
-                credentialSource: describeCredentialSource(),
+                credentialSource,
                 firestoreDatabase: db.databaseId,
             });
         } catch (error) {
