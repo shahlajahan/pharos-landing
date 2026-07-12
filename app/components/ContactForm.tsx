@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { CheckCircle2, Cpu, Globe2, Phone, Send } from "lucide-react";
+import { AlertCircle, CheckCircle2, Cpu, Globe2, Phone, Send } from "lucide-react";
 import { company } from "../company";
 
 const serviceOptions = [
@@ -24,9 +24,18 @@ type ContactFormProps = {
   className?: string;
 };
 
+type ContactApiResponse = {
+  success: boolean;
+  error?: string;
+};
+
+type SubmitStatus = "idle" | "success" | "error";
+
 export function ContactForm({ variant = "home", className = "" }: ContactFormProps) {
   const [selectedService, setSelectedService] = useState(serviceOptions[0]);
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     function handleServiceSelect(event: Event) {
@@ -51,11 +60,57 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
     };
   }, []);
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
-    event.currentTarget.reset();
-    setSelectedService(serviceOptions[0]);
+
+    // Guards against a second submit firing (double-click, Enter-key repeat)
+    // while the first request is still in flight.
+    if (isSubmitting) {
+      return;
+    }
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: String(formData.get("name") ?? ""),
+          email: String(formData.get("email") ?? ""),
+          phone: String(formData.get("phone") ?? ""),
+          service: selectedService,
+          budget: String(formData.get("budget") ?? ""),
+          message: String(formData.get("message") ?? ""),
+        }),
+      });
+
+      const result = (await response.json()) as ContactApiResponse;
+
+      if (!response.ok || !result.success) {
+        setErrorMessage(result.error ?? "Mesajınız gönderilemedi. Lütfen tekrar deneyin.");
+        setSubmitStatus("error");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Only clear the form after a confirmed successful write.
+      form.reset();
+      setSelectedService(serviceOptions[0]);
+      setSubmitStatus("success");
+      setIsSubmitting(false);
+    } catch {
+      setErrorMessage("Mesajınız gönderilemedi. Lütfen tekrar deneyin.");
+      setSubmitStatus("error");
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -95,6 +150,7 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
           <input
             name="name"
             required
+            maxLength={200}
             className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
             placeholder="Adınız"
           />
@@ -107,16 +163,18 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
             type="email"
             name="email"
             required
+            maxLength={254}
             className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
             placeholder="you@company.com"
           />
         </label>
         <label className="grid gap-2">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-            Telefon / Phone
+            Telefon / Phone <span className="normal-case text-slate-500">(opsiyonel)</span>
           </span>
           <input
             name="phone"
+            maxLength={20}
             className="h-12 rounded-lg border border-white/12 bg-white/[0.08] px-4 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
             placeholder="+90"
           />
@@ -138,17 +196,14 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
         </label>
         <label className="grid gap-2 sm:col-span-2">
           <span className="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
-            Proje Bütçesi / Project Budget
+            Proje Bütçesi / Project Budget <span className="normal-case text-slate-500">(opsiyonel)</span>
           </span>
           <select
             name="budget"
-            required
             defaultValue=""
             className="h-12 rounded-lg border border-white/12 bg-[#162437] px-4 text-sm text-white outline-none transition focus:border-emerald-300/60"
           >
-            <option value="" disabled>
-              Bütçe aralığı seçin
-            </option>
+            <option value="">Bütçe aralığı seçin (opsiyonel)</option>
             {budgetOptions.map((budget) => (
               <option key={budget}>{budget}</option>
             ))}
@@ -162,6 +217,7 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
             name="message"
             rows={variant === "home" ? 4 : 5}
             required
+            maxLength={5000}
             className="resize-none rounded-lg border border-white/12 bg-white/[0.08] px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-emerald-300/60 focus:bg-white/[0.12]"
             placeholder="Ne geliştirmek istiyorsunuz?"
           />
@@ -184,13 +240,25 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
         </div>
       ) : null}
 
-      {submitted ? (
+      {submitStatus === "success" ? (
         <div className="mt-5 flex items-start gap-3 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm leading-6 text-emerald-100">
           <CheckCircle2 size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
           <p>
-            Talebiniz alındı. Ekibimiz kapsam ve satın alma süreci için sizinle iletişime geçecektir.
+            Talebiniz alındı. Ekibimiz kapsamı değerlendirip size özel bir teklifle geri dönecektir.
             <span className="mt-1 block text-emerald-100/80">
-              Your request has been received. Our team will contact you about scope and purchase next steps.
+              Your request has been received. Our team will follow up with a tailored quote.
+            </span>
+          </p>
+        </div>
+      ) : null}
+
+      {submitStatus === "error" ? (
+        <div className="mt-5 flex items-start gap-3 rounded-xl border border-red-300/20 bg-red-400/10 p-4 text-sm leading-6 text-red-100">
+          <AlertCircle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+          <p>
+            {errorMessage || "Mesajınız gönderilemedi. Lütfen tekrar deneyin."}
+            <span className="mt-1 block text-red-100/80">
+              Your message could not be sent. Please try again.
             </span>
           </p>
         </div>
@@ -199,12 +267,16 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
       <div className={variant === "home" ? "mt-5 flex flex-col gap-3 sm:flex-row" : "mt-6"}>
         <button
           type="submit"
-          className={variant === "home"
-            ? "inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
-            : "inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"}
+          disabled={isSubmitting}
+          className={
+            (variant === "home"
+              ? "inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+              : "inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300") +
+            " disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+          }
         >
           <Send size={17} aria-hidden="true" />
-          Gönder / Send
+          {isSubmitting ? "Gönderiliyor... / Sending..." : "Gönder / Send"}
         </button>
         {variant === "home" ? (
           <a
@@ -217,9 +289,9 @@ export function ContactForm({ variant = "home", className = "" }: ContactFormPro
         ) : null}
       </div>
       <p className="mt-4 rounded-lg border border-white/10 bg-white/[0.06] px-4 py-3 text-xs leading-5 text-slate-400">
-        Hizmet detay sayfalarından sabit başlangıç fiyatı ile satın alma akışına geçebilirsiniz.
+        Talebiniz sonrası ekibimiz kapsamı değerlendirip size özel bir teklif ve güvenli ödeme bağlantısı iletecektir.
         <span className="block text-slate-500">
-          Fixed-price service checkout is available from each service detail page.
+          Our team reviews your request and follows up with a tailored quote and a secure payment link.
         </span>
       </p>
     </form>

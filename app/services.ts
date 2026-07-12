@@ -154,32 +154,6 @@ export const services: Service[] = [
     ],
   },
   {
-    slug: "production-payment-test",
-    titleTr: "Canlı Ödeme Testi",
-    titleEn: "Production Payment Test",
-    summaryTr:
-      "Canlıya geçmeden önce üretim ödeme akışını doğrulamak için kullanılan geçici bir hizmettir.",
-    summaryEn:
-      "Temporary service used only for verifying the production payment flow before launch.",
-    description:
-      "Bu hizmet, canlı (production) ortamda iyzico ödeme akışının uçtan uca doğru çalıştığını teyit etmek amacıyla geçici olarak kataloğa eklenmiştir. Gerçek bir teslimat kapsamı içermez ve üretim ödeme doğrulaması tamamlandıktan sonra kataloğdan kaldırılacaktır.",
-    features: [
-      "Üretim ödeme akışının uçtan uca doğrulanması",
-      "Geçici katalog kaydı — teslimat kapsamı içermez",
-    ],
-    timeline: "Bu kayıt geçicidir; teslimat süreci bulunmamaktadır.",
-    price: 50,
-    priceLabel: "₺50",
-    icon: "product",
-    faq: [
-      {
-        question: "Bu hizmet gerçek bir teslimat içeriyor mu?",
-        answer:
-          "Hayır. Bu kayıt yalnızca üretim ödeme akışının doğrulanması amacıyla geçici olarak eklenmiştir ve doğrulama tamamlandığında kataloğdan kaldırılacaktır.",
-      },
-    ],
-  },
-  {
     slug: "digital-product-development",
     titleTr: "Dijital Ürün Geliştirme",
     titleEn: "Digital Product Development",

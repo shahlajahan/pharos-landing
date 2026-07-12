@@ -1,9 +1,9 @@
-import Image from "next/image";
 import type { Metadata } from "next";
-import { ArrowLeft, Building2, Mail, MapPin, Phone } from "lucide-react";
+import { Building2, Mail, MapPin, Phone } from "lucide-react";
 import { company } from "../company";
 import { ContactForm } from "../components/ContactForm";
 import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Contact | Pharos Teknoloji",
@@ -26,27 +26,13 @@ const details = [
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#08111f] text-white">
-      <section className="relative overflow-hidden border-b border-white/10 px-5 pt-8 pb-12 sm:px-6 lg:px-8">
+      <SiteHeader />
+
+      <section className="relative overflow-hidden border-b border-white/10 px-5 pt-28 pb-12 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-45" aria-hidden="true" />
         <div className="absolute left-1/2 top-0 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.18),rgba(30,116,176,0.12)_42%,transparent_72%)] blur-3xl" aria-hidden="true" />
         <div className="relative mx-auto max-w-6xl">
-          <div className="flex items-center justify-between gap-4">
-            <a href="/" className="flex items-center gap-3" aria-label="Pharos Teknoloji ana sayfa">
-              <Image src="/logo.png" alt="Pharos Teknoloji logo" width={46} height={46} className="h-11 w-11 rounded-lg" />
-              <span className="text-sm font-semibold tracking-[0.14em] uppercase text-white">
-                Pharos
-              </span>
-            </a>
-            <a
-              href="/"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-white/12 bg-white/6 px-3 text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
-            >
-              <ArrowLeft size={16} aria-hidden="true" />
-              Ana sayfa
-            </a>
-          </div>
-
-          <div className="mt-14 max-w-3xl">
+          <div className="max-w-3xl">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
               İletişim / Contact
             </p>

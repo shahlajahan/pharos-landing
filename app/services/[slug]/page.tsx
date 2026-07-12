@@ -6,12 +6,13 @@ import {
   Bot,
   CheckCircle2,
   Code2,
-  CreditCard,
   Globe2,
   Rocket,
+  Send,
   Smartphone,
 } from "lucide-react";
 import { SiteFooter } from "../../components/SiteFooter";
+import { SiteHeader } from "../../components/SiteHeader";
 import { getServiceBySlug, services } from "../../services";
 
 const serviceIcons = {
@@ -44,7 +45,7 @@ export async function generateMetadata({ params }: ServicePageProps): Promise<Me
 
   return {
     title: `${service.titleEn} | Pharos Teknoloji`,
-    description: `${service.titleTr} hizmeti, ${service.priceLabel} başlangıç fiyatı ve satın alma akışı.`,
+    description: `${service.titleTr} hizmeti kapsamı, teslimat süreci ve ücretsiz ön görüşme ile teklif akışı.`,
     alternates: {
       canonical: `/services/${service.slug}`,
     },
@@ -63,7 +64,9 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
 
   return (
     <main className="min-h-screen bg-[#08111f] text-white">
-      <section className="relative overflow-hidden px-5 pt-10 pb-14 sm:px-6 lg:px-8">
+      <SiteHeader />
+
+      <section className="relative overflow-hidden px-5 pt-28 pb-14 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-50" aria-hidden="true" />
         <div className="absolute left-1/2 top-0 h-[28rem] w-[58rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.2),rgba(30,116,176,0.12)_38%,transparent_70%)] blur-3xl" aria-hidden="true" />
 
@@ -95,26 +98,27 @@ export default async function ServiceDetailPage({ params }: ServicePageProps) {
 
             <aside className="rounded-2xl border border-white/14 bg-white/10 p-6 shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-8">
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
-                Purchase
+                Teklif / Quote
               </p>
               <div className="mt-5 rounded-xl border border-emerald-300/20 bg-emerald-300/10 p-5">
-                <p className="text-sm font-semibold text-emerald-100">Fixed starting price</p>
-                <p className="mt-2 text-4xl font-semibold text-white">{service.priceLabel}</p>
+                <p className="text-sm font-semibold text-emerald-100">Ücretsiz Ön Görüşme</p>
+                <p className="mt-2 text-lg font-semibold text-white">Free Initial Consultation</p>
               </div>
               <div className="mt-5 rounded-xl border border-white/10 bg-white/[0.07] p-5">
                 <p className="text-sm font-semibold text-slate-200">Delivery timeline</p>
                 <p className="mt-2 text-sm leading-6 text-slate-400">{service.timeline}</p>
               </div>
               <a
-                href={`/checkout?service=${service.slug}`}
+                href={`/contact?service=${encodeURIComponent(service.titleEn)}`}
                 className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-emerald-400 px-5 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
               >
-                <CreditCard size={17} aria-hidden="true" />
-                Satın Al
+                <Send size={17} aria-hidden="true" />
+                Teklif Al / Request a Quote
                 <ArrowRight size={16} aria-hidden="true" />
               </a>
               <p className="mt-4 text-xs leading-5 text-slate-500">
-                Ödeme sonrası sözleşme, fatura ve kickoff süreci başlatılır.
+                Kapsam görüşmesi sonrası size özel teklif ve zaman planı hazırlanır. / A scoped quote
+                and timeline are prepared after a short discovery call.
               </p>
             </aside>
           </div>

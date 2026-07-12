@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { siteUrl } from "../company";
 import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
 import { CopyInstallCommand } from "./CopyInstallCommand";
 
 const GITHUB_URL = "https://github.com/shahlajahan/devclean";
@@ -150,6 +151,8 @@ export default function DevcleanPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+
+      <SiteHeader />
 
       <section className="relative isolate overflow-hidden bg-[#08111f] px-5 pt-28 pb-16 text-white sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-60" aria-hidden="true" />

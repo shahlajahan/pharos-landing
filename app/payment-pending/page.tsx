@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Phone, ReceiptText } from "lucide-react";
 import { company } from "../company";
 import { SiteFooter } from "../components/SiteFooter";
+import { SiteHeader } from "../components/SiteHeader";
 
 export const metadata: Metadata = {
   title: "Payment Verification Pending | Pharos Teknoloji",
@@ -24,7 +25,9 @@ export default async function PaymentPendingPage({ searchParams }: PaymentPendin
 
   return (
     <main className="min-h-screen bg-[#08111f] text-white">
-      <section className="relative overflow-hidden px-5 py-16 sm:px-6 lg:px-8">
+      <SiteHeader />
+
+      <section className="relative overflow-hidden px-5 pt-28 pb-16 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-50" aria-hidden="true" />
 
         <div className="relative mx-auto max-w-3xl rounded-2xl border border-white/14 bg-white/10 p-6 text-center shadow-2xl shadow-black/40 backdrop-blur-2xl sm:p-8">
