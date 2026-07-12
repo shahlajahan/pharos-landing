@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Manually (or CI-)triggers payment reconciliation by calling the protected
- * /api/payment/reconcile route — the same route Vercel Cron calls on its
- * schedule (see vercel.json). This script does not reimplement any
+ * Manually (or CI-, or external-scheduler-)triggers payment reconciliation
+ * by calling the protected /api/payment/reconcile route — the same route an
+ * external scheduler (Firebase Cloud Scheduler / Google Cloud Scheduler)
+ * would call on an interval. This script does not reimplement any
  * reconciliation logic itself; it is a thin authenticated HTTP client so
  * there is exactly one reconciliation code path (lib/payment/reconciliation.ts).
  *

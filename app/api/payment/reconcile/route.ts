@@ -18,10 +18,10 @@ function safeCompare(a: string, b: string): boolean {
 }
 
 /**
- * Vercel Cron automatically sends `Authorization: Bearer $CRON_SECRET` when
- * CRON_SECRET is set as a project env var and referenced by a `crons` entry
- * in vercel.json — see vercel.json and the final report for exact setup.
- * `x-cron-secret` is accepted too, for manual/script invocation.
+ * Scheduling for this route is provider-agnostic: any external scheduler
+ * (Firebase Cloud Scheduler / Google Cloud Scheduler, or a manual/script
+ * invocation) must send `Authorization: Bearer $CRON_SECRET`. `x-cron-secret`
+ * is accepted too, for manual/script invocation.
  */
 function isAuthorized(request: Request): boolean {
     const secret = process.env.CRON_SECRET?.trim();
