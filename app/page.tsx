@@ -14,6 +14,7 @@ import {
   Receipt,
   ReceiptText,
   Rocket,
+  ScanSearch,
   Send,
   ShieldCheck,
   Sparkles,
@@ -132,7 +133,28 @@ const trustItems = [
   },
 ];
 
-const devcleanTags = ["Open Source", "macOS", "Bash", "Flutter", "Xcode"];
+const labsProducts = [
+  {
+    slug: "devclean",
+    name: "devclean",
+    icon: Terminal,
+    description:
+      "A safety-first macOS CLI for auditing developer disk usage, diagnosing development environments, and cleaning recreatable caches.",
+    tags: ["Open Source", "macOS", "Bash", "Flutter", "Xcode"],
+    href: "/devclean",
+    githubUrl: "https://github.com/shahlajahan/devclean",
+  },
+  {
+    slug: "devaudit",
+    name: "DevAudit",
+    icon: ScanSearch,
+    description:
+      "Developer audit platform with plugin-based analysis and AI-ready reports.",
+    tags: ["Open Source", "Dart", "Flutter", "CLI"],
+    href: "/devaudit",
+    githubUrl: "https://github.com/shahlajahan/devaudit",
+  },
+];
 
 export default function Home() {
   return (
@@ -367,61 +389,67 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 lg:grid-cols-[1.1fr_1fr]">
-            <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/14 bg-white/[0.07] p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl transition hover:border-emerald-300/30 hover:bg-white/[0.1] sm:p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
-                <Terminal size={22} aria-hidden="true" />
-              </div>
-              <h3 className="mt-6 text-2xl font-semibold text-white">devclean</h3>
-              <p className="mt-4 text-base leading-7 text-slate-300">
-                A safety-first macOS CLI for auditing developer disk usage, diagnosing development
-                environments, and cleaning recreatable caches.
-              </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {labsProducts.map((product) => {
+              const Icon = product.icon;
 
-              <div className="mt-5 flex flex-wrap gap-2">
-                {devcleanTags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-6 flex flex-1 items-end gap-3">
-                <a
-                  href="/devclean"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+              return (
+                <article
+                  key={product.slug}
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/14 bg-white/[0.07] p-6 shadow-2xl shadow-black/30 backdrop-blur-2xl transition hover:border-emerald-300/30 hover:bg-white/[0.1] sm:p-8"
                 >
-                  View Product
-                  <ArrowRight size={16} aria-hidden="true" />
-                </a>
-                <a
-                  href="https://github.com/shahlajahan/devclean"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="devclean deposunu GitHub'da görüntüle"
-                  className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/14 bg-white/6 px-4 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
-                >
-                  <GitFork size={16} aria-hidden="true" />
-                  GitHub
-                </a>
-              </div>
-            </article>
+                  <div className="flex h-12 w-12 items-center justify-center rounded-md bg-white text-slate-950 shadow-lg shadow-black/15">
+                    <Icon size={22} aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-6 text-2xl font-semibold text-white">{product.name}</h3>
+                  <p className="mt-4 text-base leading-7 text-slate-300">{product.description}</p>
 
-            <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-              <p className="text-sm font-semibold text-slate-200">Neden paylaşıyoruz?</p>
-              <p className="mt-3 text-sm leading-7 text-slate-400">
-                Açık kaynak araçlar, mühendislik yaklaşımımızın somut bir kanıtıdır: güvenlik önce gelir,
-                her işlem test edilir ve her sürüm belgelenir. Bu, ticari projelerimizde uyguladığımız
-                standartların aynısıdır.
-              </p>
-              <p className="mt-4 text-sm leading-7 text-slate-500">
-                Open-source tools are concrete evidence of our engineering standards — the same rigor we
-                apply to every client project.
-              </p>
-            </div>
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {product.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-white/12 bg-white/[0.06] px-3 py-1 text-xs font-semibold text-slate-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="mt-6 flex flex-1 items-end gap-3">
+                    <a
+                      href={product.href}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg bg-emerald-400 px-4 text-sm font-bold text-slate-950 shadow-xl shadow-emerald-500/20 transition hover:-translate-y-0.5 hover:bg-emerald-300"
+                    >
+                      View Product
+                      <ArrowRight size={16} aria-hidden="true" />
+                    </a>
+                    <a
+                      href={product.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${product.name} deposunu GitHub'da görüntüle`}
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-white/14 bg-white/6 px-4 text-sm font-semibold text-slate-200 transition hover:bg-white/10"
+                    >
+                      <GitFork size={16} aria-hidden="true" />
+                      GitHub
+                    </a>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
+            <p className="text-sm font-semibold text-slate-200">Neden paylaşıyoruz?</p>
+            <p className="mt-3 text-sm leading-7 text-slate-400">
+              Açık kaynak araçlar, mühendislik yaklaşımımızın somut bir kanıtıdır: güvenlik önce gelir,
+              her işlem test edilir ve her sürüm belgelenir. Bu, ticari projelerimizde uyguladığımız
+              standartların aynısıdır.
+            </p>
+            <p className="mt-4 text-sm leading-7 text-slate-500">
+              Open-source tools are concrete evidence of our engineering standards — the same rigor we
+              apply to every client project.
+            </p>
           </div>
         </div>
       </section>

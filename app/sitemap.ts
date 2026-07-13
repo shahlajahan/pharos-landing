@@ -22,6 +22,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly" as const,
       priority: 0.6,
     },
+    {
+      url: `${siteUrl}/devaudit`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    },
     ...legalRoutes.map((route) => ({
       url: `${siteUrl}${route.path}`,
       lastModified,

@@ -4,7 +4,7 @@ import { company } from "../company";
 
 const navItems = [
   ["Hizmetler", "Services", "/#services"],
-  ["Açık Kaynak", "Open Source", "/devclean"],
+  ["Açık Kaynak", "Open Source", "/#labs"],
   ["Hakkımızda", "About", "/#about"],
   ["İletişim", "Contact", "/contact"],
 ];
