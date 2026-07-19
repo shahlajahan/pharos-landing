@@ -20,9 +20,9 @@ export const footerLinks = [
   { label: "İade ve İptal Politikası", href: "/refund" },
   { label: "Kullanım Şartları", href: "/terms" },
   { label: "Çerez Politikası", href: "/cookies" },
-  { label: "Platform Disclaimer", href: "/platform-disclaimer" },
-  { label: "About", href: "/#about" },
-  { label: "Contact", href: "/contact" },
+  { label: "Hizmet Sağlayıcı Bilgilendirmesi", href: "/platform-disclaimer" },
+  { label: "Hakkımızda", href: "/#about" },
+  { label: "İletişim", href: "/contact" },
 ];
 
 export const legalRoutes = [

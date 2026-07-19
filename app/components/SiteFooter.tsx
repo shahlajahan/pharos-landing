@@ -1,16 +1,17 @@
 import Image from "next/image";
+import Link from "next/link";
 import { company, footerLinks } from "../company";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-white/10 bg-[#08111f] px-5 py-10 text-slate-400 sm:px-6 lg:px-8">
+    <footer className="border-t border-white/10 bg-brand-navy-deep px-5 py-10 text-slate-400 sm:px-6 lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.05fr_1.4fr]">
         <div>
           <div className="flex items-center gap-3">
-            <Image src="/logo.png" alt="" width={42} height={42} className="h-10 w-10 rounded-md" />
+            <Image src="/pharos-mark.png" alt="" width={131} height={114} className="h-9 w-auto" />
             <div>
               <p className="text-sm font-semibold text-white">{company.brand}</p>
-              <p className="text-xs">Mobile, AI and Custom Software</p>
+              <p className="text-xs">Mobil, Yapay Zeka ve Özel Yazılım</p>
             </div>
           </div>
 
@@ -55,13 +56,13 @@ export function SiteFooter() {
 
           <nav aria-label="Alt bilgi bağlantıları" className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
             {footerLinks.map((link) => (
-              <a
+              <Link
                 key={link.href}
                 href={link.href}
-                className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 font-medium text-slate-300 transition hover:border-emerald-300/35 hover:bg-white/[0.08] hover:text-white"
+                className="rounded-md border border-white/10 bg-white/[0.04] px-3 py-2 font-medium text-slate-300 transition hover:border-brand-red/35 hover:bg-white/[0.08] hover:text-white"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </nav>
           <p className="mt-7 text-sm">

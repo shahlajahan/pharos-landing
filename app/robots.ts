@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/checkout", "/pay", "/pay/*", "/payment-success", "/payment-failed", "/payment-pending"],
     },
     sitemap: `${siteUrl}/sitemap.xml`,
     host: siteUrl,

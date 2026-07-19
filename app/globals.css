@@ -1,5 +1,34 @@
 @import "tailwindcss";
 
+/*
+ * Brand tokens, sampled directly from the canonical logo asset
+ * (public/logo.png) rather than invented — see Phase 1 notes.
+ * Navy: #0b182e sampled from the "PHAROS" wordmark fill.
+ * Red: #e91b30 sampled from the lighthouse beam / "TEKNOLOJİ" wordmark.
+ * Red-strong is a darkened red-strong tint chosen so white text on a
+ * red button clears WCAG AA (~6.2:1) instead of sitting right at the
+ * 4.5:1 edge the sampled brand red produces (~4.5:1).
+ */
+@theme {
+  --color-brand-navy: #0b182e;
+  --color-brand-navy-deep: #08111f;
+  --color-brand-navy-soft: #16233c;
+
+  --color-brand-red: #e91b30;
+  --color-brand-red-strong: #c11330;
+  --color-brand-red-soft: #fbe6e9;
+
+  --color-brand-paper: #ffffff;
+  --color-brand-mist: #f6f8fb;
+
+  --color-success: #34d399;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
 :root {
   color-scheme: dark;
   --background: #08111f;
@@ -23,9 +52,7 @@ body {
     radial-gradient(circle at 88% 8%, rgba(49, 165, 127, 0.16), transparent 24rem),
     linear-gradient(180deg, #08111f 0%, #0b1724 42%, #f6f8fb 42%, #f6f8fb 100%);
   color: var(--foreground);
-  font-family:
-    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+  font-family: var(--font-sans);
   text-rendering: geometricPrecision;
   transition: padding-bottom 180ms ease;
 }
@@ -34,13 +61,41 @@ html.cookie-consent-visible body {
   padding-bottom: 15rem;
 }
 
+html.mobile-menu-open body {
+  overflow: hidden;
+}
+
 a {
   color: inherit;
   text-decoration: none;
 }
 
 ::selection {
-  background: rgba(49, 165, 127, 0.34);
+  background: rgba(233, 27, 48, 0.28);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-red);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  background: var(--color-brand-paper);
+  color: var(--color-brand-navy);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: top 160ms ease;
+}
+
+.skip-link:focus-visible {
+  top: 1rem;
 }
 
 .text-balance {
@@ -72,30 +127,6 @@ a {
   z-index: -1;
 }
 
-.animate-rise {
-  animation: rise-in 720ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-}
-
-.rise-delay-100 {
-  animation-delay: 90ms;
-}
-
-.rise-delay-200 {
-  animation-delay: 180ms;
-}
-
-.rise-delay-300 {
-  animation-delay: 270ms;
-}
-
-.rise-delay-400 {
-  animation-delay: 360ms;
-}
-
-.rise-delay-500 {
-  animation-delay: 450ms;
-}
-
 .animate-float {
   animation: float-panel 7s ease-in-out infinite;
 }
@@ -115,18 +146,6 @@ a {
 .pulse-dot {
   box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.34);
   animation: status-pulse 2.4s ease-out infinite;
-}
-
-@keyframes rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 @keyframes float-panel {

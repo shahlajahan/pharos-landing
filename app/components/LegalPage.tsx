@@ -1,6 +1,7 @@
 import { company } from "../company";
 import { SiteFooter } from "./SiteFooter";
 import { SiteHeader } from "./SiteHeader";
+import { Badge } from "./ui/Badge";
 
 export type LegalSection = {
   heading: string;
@@ -22,17 +23,18 @@ export function LegalPage({
   sections,
 }: LegalPageProps) {
   return (
-    <main className="min-h-screen bg-[#08111f] text-white">
+    <main id="main-content" className="min-h-screen bg-brand-navy-deep text-white">
       <SiteHeader />
 
       <section className="relative overflow-hidden border-b border-white/10 px-5 pt-28 pb-12 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-45" aria-hidden="true" />
-        <div className="absolute left-1/2 top-0 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.18),rgba(30,116,176,0.12)_42%,transparent_72%)] blur-3xl" aria-hidden="true" />
+        <div
+          className="absolute left-1/2 top-0 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(233,27,48,0.16),rgba(11,24,46,0.12)_42%,transparent_72%)] blur-3xl"
+          aria-hidden="true"
+        />
         <div className="relative mx-auto max-w-5xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
-              Yasal Bilgilendirme
-            </p>
+            <Badge tone="red">Yasal Bilgilendirme</Badge>
             <h1 className="mt-4 text-4xl font-semibold tracking-normal text-white sm:text-5xl">
               {title}
             </h1>
@@ -63,7 +65,10 @@ export function LegalPage({
 
           <div className="space-y-5">
             {sections.map((section) => (
-              <article key={section.heading} className="rounded-lg border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/15 sm:p-7">
+              <article
+                key={section.heading}
+                className="rounded-lg border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/15 sm:p-7"
+              >
                 <h2 className="text-xl font-semibold text-white">{section.heading}</h2>
                 {section.paragraphs?.map((paragraph) => (
                   <p key={paragraph} className="mt-4 text-sm leading-7 text-slate-300 sm:text-base sm:leading-8">

@@ -1,11 +1,14 @@
 import type { LegalSection } from "./components/LegalPage";
 import { company } from "./company";
+import { services } from "./services";
+
+const serviceNameList = services.map((service) => service.titleTr).join(", ");
 
 export const legalContent: Record<string, { title: string; description: string; sections: LegalSection[] }> = {
   kvkk: {
     title: "KVKK Aydınlatma Metni",
     description:
-      "Bu aydınlatma metni, Pharos Teknoloji tarafından sunulan web sitesi, mobil uygulama ve Petsupo dahil dijital platformlarda kişisel verilerin nasıl işlendiğini açıklar.",
+      "Bu aydınlatma metni, Pharos Teknoloji'nin web sitesi, iletişim formu ve satın alma/ödeme süreçlerinde kişisel verilerin nasıl işlendiğini açıklar.",
     sections: [
       {
         heading: "Veri Sorumlusu",
@@ -24,48 +27,43 @@ export const legalContent: Record<string, { title: string; description: string; 
       {
         heading: "Toplanan Veri Kategorileri",
         paragraphs: [
-          "Platformun kullanımına, talep edilen hizmete ve kullanıcının verdiği izinlere göre kişisel veriler doğrudan kullanıcıdan, cihazlardan, ödeme altyapılarından, iş ortaklarından ve otomatik sistemlerden toplanabilir.",
+          "Web sitesi üzerinden yalnızca iletişim formu ve satın alma/ödeme adımlarında paylaştığınız veriler işlenir. Pharos, kullanıcı hesabı veya giriş sistemi işletmez; veriler doğrudan sizin doldurduğunuz formlardan toplanır.",
         ],
         items: [
-          "Kimlik ve iletişim verileri: ad soyad, e-posta adresi, telefon numarası, hesap bilgileri.",
-          "Konum verileri: randevu, taksi, yakın hizmet sağlayıcı veya teslimat benzeri özellikler için kullanıcının açık iznine bağlı yaklaşık veya hassas konum bilgileri.",
-          "Medya ve cihaz izinleri: galeri, kamera ve mikrofon erişimiyle yüklenen fotoğraf, video, ses veya benzeri kullanıcı içerikleri.",
-          "Evcil hayvan verileri: pet adı, tür, ırk, yaş, sağlık notları, bakım tercihleri, randevu geçmişi ve kullanıcı tarafından eklenen diğer pet bilgileri.",
-          "İşlem ve ödeme metadataları: abonelik tipi, ödeme durumu, fatura/işlem referansı, iade ve uyuşmazlık kayıtları. Kart bilgileri Pharos tarafından saklanmaz; ödeme sağlayıcısının güvenli altyapısı üzerinden işlenir.",
-          "Kullanım verileri: IP adresi, cihaz bilgisi, oturum kayıtları, hata logları, çerezler, analiz olayları ve güvenlik kayıtları.",
+          "İletişim formu verileri: ad soyad, e-posta adresi, telefon numarası (opsiyonel), ilgilenilen hizmet, bütçe aralığı (opsiyonel) ve proje mesajınız.",
+          "Satın alma/fatura verileri: ad soyad, e-posta, telefon, fatura adresi, şehir, ülke, posta kodu ve kimlik/vergi numarası (TC Kimlik, pasaport veya vergi numarası — müşteri tipine göre).",
+          "Ödeme verileri: kart numarası ve CVV gibi hassas ödeme bilgileri Pharos tarafından hiçbir şekilde saklanmaz; ödeme iyzico'nun güvenli ödeme altyapısı üzerinden doğrudan işlenir. Pharos yalnızca işlem referansı, ödeme durumu ve tutar bilgisini tutar.",
+          "Teknik veriler: web sitesi altyapısını sağlayan barındırma ve bulut hizmetleri (Firebase/Google Cloud) tarafından tutulan standart erişim ve güvenlik kayıtları.",
         ],
       },
       {
         heading: "Veri Toplama Yöntemleri",
         paragraphs: [
-          "Veriler web formları, mobil uygulama ekranları, hesap oluşturma ve kimlik doğrulama süreçleri, randevu ve sipariş işlemleri, ödeme adımları, destek talepleri, çerezler, SDK'lar, log kayıtları ve kullanıcı tarafından yüklenen içerikler aracılığıyla elektronik ortamda toplanır.",
-          "Firebase altyapısı kullanıldığında veriler ve teknik kayıtlar, Firebase'in Avrupa bölgesindeki sunucularında işlenebilir veya saklanabilir. Kullanılan hizmetin niteliğine göre yedekleme, güvenlik, hata izleme ve performans kayıtları da bu altyapıda tutulabilir.",
+          "Veriler, iletişim formu ve satın alma formu aracılığıyla elektronik ortamda doğrudan sizin tarafınızdan girilerek toplanır.",
+          "Form verileri Firebase/Firestore altyapısında saklanır; ödeme işlemleri iyzico'nun sunucularında gerçekleştirilir.",
         ],
       },
       {
         heading: "İşleme Amaçları",
         items: [
-          "Hesap oluşturma, oturum açma, kimlik doğrulama ve kullanıcı güvenliğini sağlama.",
-          "Abonelik, randevu, pazar yeri, dijital ürün ve hizmet işlemlerini yürütme.",
-          "Veteriner, kuaför, taksi sağlayıcısı, otel ve diğer işletmelerle kullanıcı taleplerini eşleştirme.",
-          "Ödeme, faturalama, iade, iptal ve uyuşmazlık süreçlerini yönetme.",
-          "Kullanıcı destek taleplerini cevaplama ve iletişim yürütme.",
-          "Platform güvenliğini sağlama, kötüye kullanımı önleme ve hata kayıtlarını inceleme.",
-          "Hizmet kalitesini ölçme, analiz yapma, ürün geliştirme ve performans iyileştirme.",
-          "Yasal yükümlülükleri yerine getirme ve yetkili kurum taleplerini karşılama.",
+          "İletişim formu talebinizi değerlendirmek ve size dönüş yapmak.",
+          "Satın alınan hizmet için sözleşme, fatura ve teslim sürecini yürütmek.",
+          "Ödeme işlemini iyzico üzerinden güvenli şekilde gerçekleştirmek.",
+          "Yasal yükümlülükleri (fatura, muhasebe, vergi mevzuatı) yerine getirmek.",
+          "Web sitesi güvenliğini sağlamak ve kötüye kullanımı önlemek.",
         ],
       },
       {
         heading: "Hukuki Sebepler ve Aktarımlar",
         paragraphs: [
-          "Kişisel veriler; sözleşmenin kurulması veya ifası, hukuki yükümlülüklerin yerine getirilmesi, meşru menfaat, bir hakkın tesisi veya korunması ve gerekli hallerde açık rıza hukuki sebeplerine dayanılarak işlenir.",
-          "Veriler, hizmetin sunulması için ödeme kuruluşları, barındırma ve bulut hizmet sağlayıcıları, Firebase ve benzeri teknik altyapı sağlayıcıları, analiz ve hata izleme araçları, hizmet sağlayıcı işletmeler, yetkili kamu kurumları ve hukuki danışmanlarla sınırlı olarak paylaşılabilir.",
+          "Kişisel veriler; sözleşmenin kurulması veya ifası, hukuki yükümlülüklerin yerine getirilmesi ve meşru menfaat hukuki sebeplerine dayanılarak işlenir.",
+          "Veriler; ödeme işlemi için iyzico, barındırma ve veri depolama için Firebase/Google Cloud, ve yasal yükümlülük halinde yetkili kamu kurumları ile sınırlı olarak paylaşılabilir.",
         ],
       },
       {
         heading: "Saklama Süresi",
         paragraphs: [
-          "Kişisel veriler işleme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen zamanaşımı, muhasebe, vergi, tüketici hukuku, sözleşme ve bilgi güvenliği yükümlülükleri süresince saklanır. Amaç ortadan kalktığında veriler silinir, yok edilir veya anonim hale getirilir.",
+          "Kişisel veriler işleme amacının gerektirdiği süre boyunca ve ilgili mevzuatta öngörülen zamanaşımı, muhasebe, vergi ve sözleşme yükümlülükleri süresince saklanır. Amaç ortadan kalktığında veriler silinir, yok edilir veya anonim hale getirilir.",
         ],
       },
       {
@@ -85,60 +83,48 @@ export const legalContent: Record<string, { title: string; description: string; 
   privacy: {
     title: "Gizlilik Politikası",
     description:
-      "Bu politika, Pharos Teknoloji web sitesi ve dijital platformlarında gizlilik, güvenlik, çerezler, analiz, kimlik doğrulama ve hesap silme süreçlerini açıklar.",
+      "Bu politika, Pharos Teknoloji web sitesinde gizlilik, çerezler, iletişim formu, ödeme süreci ve güvenlik uygulamalarını açıklar.",
     sections: [
       {
         heading: "Kapsam",
         paragraphs: [
-          "Bu Gizlilik Politikası, Pharos Teknoloji tarafından sunulan web sitesi, mobil uygulamalar, Petsupo platformu, dijital ürünler, abonelikler, randevu ve pazar yeri hizmetleri için geçerlidir.",
+          "Bu Gizlilik Politikası, Pharos Teknoloji'nin kurumsal web sitesi, iletişim formu ve hizmet satın alma/ödeme akışı için geçerlidir.",
         ],
       },
       {
         heading: "Çerezler",
         paragraphs: [
-          "Web sitesinde oturumun çalışması, güvenlik, tercihlerin hatırlanması, performans ölçümü ve kullanım analizleri için çerezler ve benzeri teknolojiler kullanılabilir. Zorunlu çerezler hizmetin sunulması için gereklidir; analitik ve tercih çerezleri kullanıcı ayarlarına göre yönetilebilir.",
+          "Web sitesi, çerez onay tercihinizi hatırlamak için tarayıcınızın yerel depolama alanını kullanır. Bunun dışında zorunlu olmayan çerez veya analiz aracı kullanılmamaktadır; bu politika, ileride analiz veya benzer araçlar eklenmesi halinde güncellenecektir.",
         ],
       },
       {
-        heading: "Analitik",
+        heading: "İletişim Formu",
         paragraphs: [
-          "Platform performansını, sayfa görüntülemelerini, özellik kullanımını, hata kayıtlarını ve dönüşüm metriklerini anlamak için analitik araçları kullanılabilir. Analitik veriler ürün geliştirme, güvenlik ve hizmet kalitesi amaçlarıyla değerlendirilir.",
-        ],
-      },
-      {
-        heading: "Kimlik Doğrulama",
-        paragraphs: [
-          "Hesap açma ve oturum açma süreçlerinde e-posta, telefon, tek kullanımlık doğrulama kodları, cihaz ve oturum kayıtları işlenebilir. Şüpheli erişimleri önlemek için güvenlik kayıtları tutulabilir.",
+          "İletişim formunda paylaştığınız ad, e-posta, telefon, ilgilenilen hizmet, bütçe ve mesaj bilgileri talebinizi değerlendirmek ve size dönüş yapmak amacıyla Firestore veritabanında saklanır.",
         ],
       },
       {
         heading: "Ödeme Sistemleri",
         paragraphs: [
-          "Abonelik, randevu, dijital ürün ve pazar yeri ödemeleri yetkili ödeme sağlayıcıları üzerinden yürütülür. Pharos kart numarası ve CVV gibi hassas ödeme bilgilerini kendi sistemlerinde saklamaz. İşlem referansı, ödeme durumu, fatura bilgisi, iade kaydı ve uyuşmazlık metadataları operasyonel ve yasal amaçlarla tutulabilir.",
-        ],
-      },
-      {
-        heading: "Kullanıcı Tarafından Oluşturulan İçerik",
-        paragraphs: [
-          "Kullanıcılar profil, pet bilgileri, fotoğraf, video, yorum, mesaj, randevu notu veya destek talebi gibi içerikler ekleyebilir. Kullanıcı, yüklediği içeriklerin hukuka uygun olmasından ve üçüncü kişilerin haklarını ihlal etmemesinden sorumludur.",
+          "Hizmet satın alma ödemeleri iyzico'nun güvenli ödeme altyapısı üzerinden yürütülür. Pharos kart numarası ve CVV gibi hassas ödeme bilgilerini kendi sistemlerinde saklamaz. İşlem referansı, ödeme durumu ve fatura bilgisi operasyonel ve yasal amaçlarla tutulabilir.",
         ],
       },
       {
         heading: "Üçüncü Taraf Hizmetler",
         paragraphs: [
-          "Platform; barındırma, Firebase, analiz, hata izleme, ödeme, bildirim, harita, iletişim ve hizmet sağlayıcı entegrasyonları gibi üçüncü taraf hizmetlerden yararlanabilir. Bu hizmetler yalnızca gerekli teknik ve operasyonel amaçlarla veri işleyebilir.",
+          "Web sitesi; barındırma ve veritabanı için Firebase/Google Cloud, ödeme için iyzico hizmetlerinden yararlanır. Bu hizmetler yalnızca gerekli teknik ve operasyonel amaçlarla veri işler.",
         ],
       },
       {
         heading: "Güvenlik",
         paragraphs: [
-          "Pharos, yetkisiz erişim, veri kaybı, kötüye kullanım ve hizmet kesintilerini azaltmak için makul teknik ve idari güvenlik tedbirleri uygular. İnternet üzerinden veri iletiminin tamamen risksiz olmadığı dikkate alınmalıdır.",
+          "Pharos, yetkisiz erişim, veri kaybı ve kötüye kullanımı azaltmak için makul teknik ve idari güvenlik tedbirleri uygular. İnternet üzerinden veri iletiminin tamamen risksiz olmadığı dikkate alınmalıdır.",
         ],
       },
       {
-        heading: "Hesap Silme Talebi",
+        heading: "Verilerinize Erişim Talebi",
         paragraphs: [
-          `Kullanıcılar hesap silme taleplerini uygulama içindeki ilgili alandan veya ${company.email} adresine e-posta göndererek iletebilir. Talep doğrulandıktan sonra hesap kapatılır; yasal yükümlülükler, açık uyuşmazlıklar, ödeme kayıtları, güvenlik logları ve mevzuat gereği saklanması gereken veriler ilgili süreler boyunca muhafaza edilebilir.`,
+          `Paylaştığınız verilere erişim, düzeltme veya silme talepleriniz için ${company.email} adresinden bizimle iletişime geçebilirsiniz.`,
         ],
       },
     ],
@@ -146,53 +132,44 @@ export const legalContent: Record<string, { title: string; description: string; 
   terms: {
     title: "Kullanım Şartları",
     description:
-      "Bu kullanım şartları, Pharos Teknoloji ve Petsupo dahil dijital platformların kullanımına ilişkin hak ve yükümlülükleri düzenler.",
+      "Bu kullanım şartları, Pharos Teknoloji web sitesinin ve hizmet satın alma sürecinin kullanımına ilişkin hak ve yükümlülükleri düzenler.",
     sections: [
       {
         heading: "Kabul ve Kapsam",
         paragraphs: [
-          "Web sitesini, mobil uygulamayı veya platform hizmetlerini kullanan herkes bu Kullanım Şartları'nı kabul etmiş sayılır. Bu şartlar abonelikler, randevular, pazar yeri işlemleri, dijital ürünler ve destek hizmetleri için geçerlidir.",
+          "Web sitesini kullanan veya iletişim formu ile satın alma akışı üzerinden Pharos Teknoloji'den hizmet talep eden herkes bu Kullanım Şartları'nı kabul etmiş sayılır.",
+        ],
+      },
+      {
+        heading: "Sunulan Hizmetler",
+        paragraphs: [
+          `Pharos Teknoloji; ${serviceNameList} başta olmak üzere, özel yazılım geliştirme hizmetleri sunar. Web sitesinde gösterilen paketler, daha kapsamlı bir mühendislik ortaklığı için başlangıç noktalarıdır; nihai kapsam ve fiyat, ücretsiz ön görüşme sonrası netleştirilir.`,
         ],
       },
       {
         heading: "Kullanıcı Sorumlulukları",
         items: [
-          "Hesap bilgilerinin doğru, güncel ve eksiksiz tutulması.",
-          "Giriş bilgilerinin gizli tutulması ve yetkisiz kullanımların bildirilmesi.",
-          "Pet, randevu, ödeme, adres, konum ve iletişim bilgilerinin hukuka uygun paylaşılması.",
-          "Platformun üçüncü kişilerin haklarını ihlal edecek veya hizmet güvenliğini zedeleyecek şekilde kullanılmaması.",
+          "İletişim formu ve satın alma formunda paylaşılan bilgilerin doğru, güncel ve eksiksiz olması.",
+          "Proje kapsamı ve gereksinimlerin mümkün olduğunca net şekilde iletilmesi.",
+          "Fatura ve ödeme bilgilerinin hukuka uygun şekilde paylaşılması.",
         ],
       },
       {
-        heading: "Platform Kullanım Kuralları",
-        items: [
-          "Sahte hesap, yanıltıcı bilgi, dolandırıcılık, taciz, spam, zararlı yazılım veya tersine mühendislik faaliyetleri yasaktır.",
-          "Kullanıcı içerikleri hukuka, ahlaka, fikri mülkiyet haklarına ve platform kurallarına uygun olmalıdır.",
-          "Randevu ve pazar yeri işlemlerinde kullanıcılar seçtikleri hizmet sağlayıcıların koşullarına ve uygulama içi bilgilendirmelere uymalıdır.",
-        ],
-      },
-      {
-        heading: "Hesap Askıya Alma ve Sonlandırma",
+        heading: "Hizmet Süreci",
         paragraphs: [
-          "Pharos; güvenlik riski, hukuka aykırı kullanım, ödeme sorunu, üçüncü kişi hak ihlali, yanıltıcı bilgi, kötüye kullanım veya bu şartların ihlali halinde hesabı geçici veya kalıcı olarak askıya alma, erişimi sınırlama ya da hizmeti sonlandırma hakkını saklı tutar.",
+          "Süreç; talep formu, ücretsiz ön görüşme, kapsam ve fiyat teklifinin onayı, güvenli ödeme ve proje kickoff adımlarını izler. Teslim süreleri, onaylanan teklifte belirtilen zaman planına göre uygulanır.",
         ],
       },
       {
-        heading: "Abonelik Şartları",
+        heading: "Sözleşme İlişkisi",
         paragraphs: [
-          "Abonelikler seçilen plan, süre, fiyat ve yenileme koşullarına göre uygulanır. Kullanıcı, aboneliği başlatmadan önce gösterilen ücretleri ve ödeme dönemlerini kabul eder. Abonelik iptalleri bir sonraki dönem için geçerli olur; yürürlükteki dönem için iade hakkı İptal ve İade Politikası'na göre değerlendirilir.",
-        ],
-      },
-      {
-        heading: "Pazar Yeri ve Hizmet Sınırlamaları",
-        paragraphs: [
-          "Pharos, Petsupo gibi platformlarda kullanıcılarla veteriner, kuaför, taksi sağlayıcısı, otel ve diğer işletmeleri buluşturan teknoloji sağlayıcı ve aracı platform rolündedir. Hizmetin fiili ifası, fiyatlandırma detayları, uygunluk, lisans, kalite ve sonuçlarından ilgili hizmet sağlayıcı sorumludur.",
+          "Ödeme sonrası hizmet kapsamı, teslim planı ve tarafların yükümlülükleri ayrıca bir sözleşme ile netleştirilir. Bu Kullanım Şartları, taraflar arasında ayrıca imzalanan sözleşme hükümlerinin yerine geçmez.",
         ],
       },
       {
         heading: "Sorumluluk Sınırları",
         paragraphs: [
-          "Platform kesintisiz, hatasız veya her kullanıcı beklentisine uygun çalışacağını garanti etmez. Pharos, yürürlükteki hukukun izin verdiği ölçüde dolaylı zararlar, kar kaybı, veri kaybı, üçüncü taraf hizmetleri, hizmet sağlayıcı davranışları ve kullanıcı kaynaklı hatalardan sorumlu tutulamaz.",
+          "Pharos, sözleşmede belirtilen kapsam ve standartlar dahilinde hizmet sunmayı taahhüt eder. Yürürlükteki hukukun izin verdiği ölçüde, sözleşme kapsamı dışındaki kullanımlardan veya kullanıcı kaynaklı hatalı bilgi/gereksinimlerden doğan sonuçlardan Pharos sorumlu tutulamaz.",
         ],
       },
     ],
@@ -200,51 +177,42 @@ export const legalContent: Record<string, { title: string; description: string; 
   "distance-sales": {
     title: "Mesafeli Satış Sözleşmesi",
     description:
-      "Bu sözleşme, Pharos Teknoloji platformları üzerinden sunulan abonelik, randevu, pazar yeri hizmeti ve dijital ürün işlemleri için genel mesafeli satış hükümlerini açıklar.",
+      "Bu sözleşme, Pharos Teknoloji web sitesi üzerinden satın alınan yazılım geliştirme hizmeti paketleri için genel mesafeli satış hükümlerini açıklar.",
     sections: [
       {
         heading: "Taraflar",
         paragraphs: [
-          `Satıcı veya sağlayıcı: ${company.name}. Alıcı veya kullanıcı: Platform üzerinden abonelik, randevu, dijital ürün veya pazar yeri hizmeti satın alan gerçek ya da tüzel kişi.`,
+          `Satıcı: ${company.name}. Alıcı: Web sitesi üzerinden hizmet paketi satın alan gerçek ya da tüzel kişi.`,
+        ],
+        items: [
+          `Unvan: ${company.name}`,
+          `Adres: ${company.address}`,
+          `Telefon: ${company.phone}`,
+          `E-posta: ${company.email}`,
         ],
       },
       {
         heading: "Konu",
         paragraphs: [
-          "Bu sözleşme, elektronik ortamda kurulan ve dijital hizmetler, abonelikler, randevu rezervasyonları, pazar yeri hizmetleri ve dijital ürünlerin satın alınmasına ilişkin tarafların hak ve yükümlülüklerini düzenler.",
+          "Bu sözleşme, elektronik ortamda kurulan ve web sitesinde listelenen yazılım geliştirme hizmeti paketlerinin satın alınmasına ilişkin tarafların hak ve yükümlülüklerini düzenler.",
         ],
       },
       {
-        heading: "Hizmet ve Ürün Bilgileri",
-        items: [
-          "Abonelikler: Kullanıcıya belirli süre veya dönem boyunca sunulan dijital özellikler ve hizmet paketleri.",
-          "Randevular: Veteriner, kuaför, bakım, taksi, otel veya benzeri hizmet sağlayıcılarla oluşturulan tarih ve saat bazlı rezervasyonlar.",
-          "Pazar yeri hizmetleri: Kullanıcı ile bağımsız işletme veya profesyonelleri buluşturan platform işlemleri.",
-          "Dijital ürünler: Uygulama içi içerikler, dijital planlar, raporlar, yazılım özellikleri, online hizmetler veya elektronik olarak teslim edilen benzeri ürünler.",
+        heading: "Hizmet Bilgileri",
+        paragraphs: [
+          `Satın alınabilecek hizmetler: ${serviceNameList}. Her hizmetin kapsamı, dahil olan özellikler ve teslim süresi ilgili hizmet detay sayfasında belirtilir.`,
         ],
       },
       {
         heading: "Fiyat, Ödeme ve Teslimat",
         paragraphs: [
-          "Hizmetin fiyatı, vergiler, ödeme dönemi, teslim veya ifa zamanı satın alma ekranında gösterilir. Ödeme, platformda sunulan ödeme altyapısı üzerinden tamamlanır. Dijital ürün ve aboneliklerde teslimat elektronik erişim sağlanmasıyla; randevularda ise rezervasyon onayı ve hizmet sağlayıcının ifasıyla gerçekleşir.",
+          "Hizmetin başlangıç fiyatı ve teslim süresi, satın alma öncesinde web sitesinde açıkça gösterilir. Ödeme, iyzico güvenli ödeme altyapısı üzerinden tamamlanır. Ödeme sonrası proje kickoff toplantısı ile teslim süreci başlar.",
         ],
       },
       {
         heading: "Cayma Hakkı",
         paragraphs: [
-          "Cayma hakkı, satın alınan hizmetin niteliğine ve yürürlükteki tüketici mevzuatına göre değerlendirilir. Kullanıcının onayıyla elektronik ortamda anında ifasına başlanan dijital içerik veya dijital hizmetlerde, ifa başladıktan sonra cayma hakkı sınırlanabilir. Belirli tarihli randevu ve rezervasyonlarda iptal koşulları hizmet sağlayıcı veya platform tarafından satın alma öncesinde bildirilen kurallara göre uygulanır.",
-        ],
-      },
-      {
-        heading: "Abonelikler",
-        paragraphs: [
-          "Abonelikler satın alma ekranında belirtilen dönemlerde yenilenebilir. Kullanıcı aboneliğini uygulama mağazası, ödeme sağlayıcı paneli veya platform içi hesap alanından iptal edebilir. İptal, aksi belirtilmedikçe mevcut dönemin sonuna kadar erişimi sürdürür ve sonraki yenilemeyi durdurur.",
-        ],
-      },
-      {
-        heading: "Pazar Yeri İşlemleri",
-        paragraphs: [
-          "Pazar yeri modelinde Pharos, teknoloji altyapısı ve aracı platform sağlar. Fiili hizmet, randevu uygunluğu, mesleki kararlar, hizmet kalitesi, yasal izinler ve işletme kaynaklı iadeler ilgili hizmet sağlayıcı tarafından yönetilir. Pharos, kullanıcı deneyimini korumak için destek ve uyuşmazlık yönetimi süreçleri sunabilir.",
+          "Kullanıcının onayıyla ifasına başlanan bir hizmetin niteliğine göre cayma hakkının uygulanma şekli değişebilir. Ödeme sonrası proje kickoff toplantısı yapılmadan önce iletilen cayma talepleri değerlendirilir; kickoff sonrası başlayan iş için cayma hakkı, yürürlükteki tüketici mevzuatına göre sınırlanabilir.",
         ],
       },
       {
@@ -258,18 +226,18 @@ export const legalContent: Record<string, { title: string; description: string; 
   refund: {
     title: "İptal ve İade Politikası",
     description:
-      "Bu politika, abonelik iptalleri, randevu iptalleri, iade koşulları, iade edilmeyen durumlar ve ödeme uyuşmazlıkları için uygulanır.",
+      "Bu politika, Pharos Teknoloji hizmet paketi satın alımlarında iptal, iade koşulları ve ödeme uyuşmazlıkları için uygulanır.",
     sections: [
       {
-        heading: "Abonelik İptali",
+        heading: "Ödeme Öncesi İptal",
         paragraphs: [
-          "Kullanıcılar aboneliklerini uygulama mağazası, ödeme sağlayıcı hesabı veya platform içi hesap ayarları üzerinden iptal edebilir. İptal işlemi, aksi belirtilmedikçe bir sonraki yenileme dönemini durdurur ve mevcut dönem sonuna kadar erişim devam eder.",
+          "Ücretsiz ön görüşme ve teklif aşamasında herhangi bir ücret alınmaz; bu aşamada iptal serbesttir.",
         ],
       },
       {
-        heading: "Randevu İptali",
+        heading: "Ödeme Sonrası İptal",
         paragraphs: [
-          "Randevu iptalleri, seçilen hizmet sağlayıcının takvimi, hizmet türü ve satın alma öncesinde gösterilen iptal koşullarına göre değerlendirilir. Geç iptal, randevuya gelmeme veya hizmet sağlayıcının hazırlık maliyeti doğurduğu durumlarda ücret kesintisi uygulanabilir.",
+          "Ödeme tamamlandıktan ve proje kickoff toplantısı yapılmadan önce iletilen iptal talepleri tam iade ile sonuçlandırılır. Kickoff toplantısı yapılmış ve geliştirme süreci başlamış projelerde, o ana kadar tamamlanan iş göz önünde bulundurularak kısmi iade değerlendirilir.",
         ],
       },
       {
@@ -277,7 +245,6 @@ export const legalContent: Record<string, { title: string; description: string; 
         items: [
           "Hizmetin teknik hata nedeniyle hiç sunulamaması ve makul sürede giderilememesi.",
           "Mükerrer ödeme alınması.",
-          "Hizmet sağlayıcının onaylı randevuyu yerine getirmemesi ve alternatif çözüm sunulamaması.",
           "Platform tarafından açıkça hatalı fiyatlandırma veya işlem yapılması.",
           "Yürürlükteki mevzuat kapsamında iade hakkı doğuran diğer haller.",
         ],
@@ -285,23 +252,20 @@ export const legalContent: Record<string, { title: string; description: string; 
       {
         heading: "İade Edilmeyen Durumlar",
         items: [
-          "Kullanıcının onayıyla erişime açılan ve kullanılmaya başlanan dijital içerik veya dijital hizmetler.",
-          "Mevcut abonelik döneminde kullanılmış süre veya özellikler.",
-          "Randevuya gelmeme, geç iptal veya kullanıcı kaynaklı eksik/yanlış bilgi nedeniyle ifa edilemeyen hizmetler.",
-          "Üçüncü taraf hizmet sağlayıcının kendi koşullarında iade dışı olduğu satın alma öncesinde bildirilen işlemler.",
-          "Kampanya, promosyon veya deneme haklarının nakde çevrilmesi talepleri.",
+          "Kickoff toplantısı sonrası tamamlanmış geliştirme çalışması karşılığı ödemeler.",
+          "Kullanıcı kaynaklı eksik veya yanlış proje bilgisi/gereksinimi nedeniyle oluşan gecikmeler.",
         ],
       },
       {
         heading: "İade Süreci",
         paragraphs: [
-          `İade talepleri işlem bilgileriyle birlikte ${company.email} adresine iletilebilir. Talep incelenirken kullanıcı kimliği, ödeme kaydı, hizmet durumu, randevu geçmişi, sağlayıcı yanıtı ve teknik kayıtlar dikkate alınır. Onaylanan iadeler ödeme sağlayıcısının işlem sürelerine göre aynı ödeme yöntemine aktarılır.`,
+          `İade talepleri işlem bilgileriyle birlikte ${company.email} adresine iletilebilir. Talep incelenirken ödeme kaydı ve proje durumu dikkate alınır. Onaylanan iadeler, iyzico'nun işlem sürelerine göre aynı ödeme yöntemine aktarılır.`,
         ],
       },
       {
         heading: "Ödeme Uyuşmazlıkları",
         paragraphs: [
-          "Kullanıcı, kart sahibi itirazı veya chargeback başlatmadan önce destek kanalı üzerinden başvuru yapmalıdır. Pharos, ödeme kuruluşları ve hizmet sağlayıcılarla birlikte uyuşmazlık kayıtlarını inceleyebilir; kötüye kullanım veya haksız itiraz halinde hesabı sınırlandırma hakkını saklı tutar.",
+          "Kullanıcı, kart sahibi itirazı veya chargeback başlatmadan önce destek kanalı üzerinden başvuru yapmalıdır. Pharos, iyzico ile birlikte uyuşmazlık kayıtlarını inceleyebilir.",
         ],
       },
     ],
@@ -309,74 +273,61 @@ export const legalContent: Record<string, { title: string; description: string; 
   cookies: {
     title: "Çerez Politikası",
     description:
-      "Bu politika, Pharos Teknoloji web sitesinde kullanılan zorunlu, analitik ve tercih çerezlerinin amaçlarını açıklar.",
+      "Bu politika, Pharos Teknoloji web sitesinde kullanılan çerez ve benzeri depolama teknolojilerinin amaçlarını açıklar.",
     sections: [
       {
         heading: "Çerez Nedir?",
         paragraphs: [
-          "Çerezler, web sitesi ziyaret edildiğinde tarayıcıya veya cihaza kaydedilen küçük veri dosyalarıdır. Benzer teknolojiler yerel depolama, piksel, SDK ve oturum tanımlayıcılarını içerebilir.",
+          "Çerezler, web sitesi ziyaret edildiğinde tarayıcıya veya cihaza kaydedilen küçük veri dosyalarıdır. Bu sayfa, tarayıcı yerel depolama alanı (localStorage) gibi benzer teknolojileri de kapsar.",
         ],
       },
       {
-        heading: "Zorunlu Çerezler",
+        heading: "Kullanılan Depolama Teknolojileri",
         paragraphs: [
-          "Zorunlu çerezler web sitesinin güvenli ve temel fonksiyonlarıyla çalışması için gereklidir. Oturum yönetimi, form güvenliği, yük dengeleme, dil veya güvenlik tercihleri gibi amaçlarla kullanılabilir ve devre dışı bırakılmaları hizmetin çalışmasını etkileyebilir.",
+          "Web sitesi şu anda yalnızca çerez onay tercihinizi hatırlamak için tarayıcınızın yerel depolama alanını kullanır. Bunun dışında analiz, reklam veya izleme amaçlı çerez kullanılmamaktadır.",
         ],
       },
       {
-        heading: "Analitik Çerezler",
+        heading: "Zorunlu Depolama",
         paragraphs: [
-          "Analitik çerezler ziyaretçi sayısı, sayfa görüntüleme, trafik kaynağı, performans, hata ve etkileşim verilerini anlamak için kullanılabilir. Bu veriler siteyi iyileştirmek ve kullanıcı deneyimini ölçmek amacıyla değerlendirilir.",
+          "Çerez onay tercihinizin hatırlanması, tercihinizi her ziyarette tekrar sormamak için gereklidir ve web sitesinin temel çalışması için zorunludur.",
         ],
       },
       {
-        heading: "Tercih Çerezleri",
+        heading: "Gelecekteki Değişiklikler",
         paragraphs: [
-          "Tercih çerezleri kullanıcının dil, bölge, görünüm veya önceki seçimlerini hatırlamak için kullanılabilir. Bu çerezler kullanıcı deneyimini kişiselleştirmeye yardımcı olur.",
+          "Web sitesine ileride analiz veya benzer araçlar eklenmesi halinde bu politika güncellenecek ve eklenen araçlar burada açıkça belirtilecektir.",
         ],
       },
       {
-        heading: "Çerez Yönetimi",
+        heading: "Yönetim",
         paragraphs: [
-          "Kullanıcılar tarayıcı ayarlarından çerezleri silebilir, engelleyebilir veya belirli çerez türleri için uyarı alabilir. Zorunlu olmayan çerezler için sunulan tercih mekanizmaları üzerinden seçimler güncellenebilir.",
+          "Kullanıcılar tarayıcı ayarlarından yerel depolama verilerini ve çerezleri silebilir.",
         ],
       },
     ],
   },
   "platform-disclaimer": {
-    title: "Platform Sorumluluk Beyanı",
+    title: "Hizmet Sağlayıcı Bilgilendirmesi",
     description:
-      "Bu beyan, Petsupo ve Pharos platformlarının hizmet sağlayıcılar karşısındaki aracı teknoloji sağlayıcı rolünü açıklar.",
+      "Bu sayfa, Pharos Teknoloji'nin web sitesinde sunulan hizmetler karşısındaki rolünü açıklar.",
     sections: [
       {
-        heading: "Platform Sağlayıcı Rolü",
+        heading: "Doğrudan Hizmet Sağlayıcı",
         paragraphs: [
-          "Petsupo ve Pharos, kullanıcıların veterinerler, pet kuaförleri, taksi sağlayıcıları, oteller, mağazalar ve diğer işletmelerle dijital ortamda iletişim kurmasına, randevu veya işlem oluşturmasına yardımcı olan teknoloji platformlarıdır.",
-          "Pharos, platform altyapısı, yazılım, listeleme, rezervasyon, ödeme akışı, bildirim ve destek araçları sağlayabilir; ancak platformda yer alan bağımsız hizmet sağlayıcıların fiili hizmetlerinin doğrudan sağlayıcısı değildir.",
+          "Pharos Teknoloji, web sitesinde listelenen yazılım geliştirme hizmetlerini kendi mühendislik ekibiyle doğrudan sunan bir yazılım geliştirme şirketidir. Pharos, kullanıcıları bağımsız üçüncü taraf hizmet sağlayıcılarla buluşturan bir aracı pazar yeri platformu değildir.",
         ],
       },
       {
-        heading: "Hizmet Sağlayıcı Sorumluluğu",
+        heading: "Sorumluluk",
         paragraphs: [
-          "Veterinerler, kuaförler, taksi sağlayıcıları, oteller, işletmeler ve diğer profesyoneller kendi lisansları, izinleri, mesleki kararları, hizmet kalitesi, fiyatlandırmaları, çalışanları, ekipmanları, hijyen koşulları, teslimatları ve kullanıcıyla kurdukları hizmet ilişkisi bakımından sorumludur.",
+          "Satın alınan her hizmetin kapsamı, teslim süreci ve sonuçlarından doğrudan Pharos Teknoloji sorumludur; bu sorumluluk, ödeme sonrası hazırlanan sözleşme ve teklif ile netleştirilir.",
         ],
       },
       {
-        heading: "Aracı Teknoloji Sağlayıcı",
+        heading: "İletişim",
         paragraphs: [
-          "Pharos ve Petsupo, kullanıcı ile hizmet sağlayıcı arasındaki ilişkiyi kolaylaştıran aracı teknoloji sağlayıcıdır. Platformda gösterilen uygunluk, puan, yorum, fiyat, süre ve hizmet açıklamaları hizmet sağlayıcılardan, kullanıcılardan veya entegrasyonlardan gelebilir ve zaman içinde değişebilir.",
-        ],
-      },
-      {
-        heading: "Sınırlamalar",
-        paragraphs: [
-          "Pharos, yürürlükteki hukukun izin verdiği ölçüde, bağımsız hizmet sağlayıcıların hatalı teşhis, tedavi, bakım, taşıma, konaklama, gecikme, iptal, eksik ifa, fiyat uyuşmazlığı veya kullanıcıya verdiği zararlardan doğrudan sorumlu değildir. Platform, uyuşmazlıkların çözümü için destek süreçleri sunabilir ancak hizmet sağlayıcının yasal sorumluluğunu üstlenmez.",
-        ],
-      },
-      {
-        heading: "Kullanıcı Değerlendirmesi",
-        paragraphs: [
-          "Kullanıcılar hizmet almadan önce sağlayıcının lisansını, uzmanlığını, koşullarını, fiyatını, iptal politikasını ve hizmete uygunluğunu değerlendirmelidir. Acil sağlık veya güvenlik durumlarında doğrudan yetkili profesyoneller, acil servisler veya ilgili kamu kurumlarıyla iletişime geçilmelidir.",
+          `Bu sayfa hakkında sorularınız için ${company.email} adresinden bizimle iletişime geçebilirsiniz.`,
         ],
       },
     ],

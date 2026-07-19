@@ -1,15 +1,35 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { Button } from "./ui/Button";
 
 const storageKey = "pharos-cookie-consent";
+const listeners = new Set<() => void>();
+
+function subscribe(callback: () => void) {
+  listeners.add(callback);
+  return () => listeners.delete(callback);
+}
+
+function notify() {
+  listeners.forEach((listener) => listener());
+}
+
+function getConsentSnapshot() {
+  return window.localStorage.getItem(storageKey) === null;
+}
+
+function getServerConsentSnapshot() {
+  return false;
+}
+
+function saveConsent(value: "accepted" | "rejected") {
+  window.localStorage.setItem(storageKey, value);
+  notify();
+}
 
 export function CookieConsent() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(!window.localStorage.getItem(storageKey));
-  }, []);
+  const isVisible = useSyncExternalStore(subscribe, getConsentSnapshot, getServerConsentSnapshot);
 
   useEffect(() => {
     document.documentElement.classList.toggle("cookie-consent-visible", isVisible);
@@ -19,11 +39,6 @@ export function CookieConsent() {
     };
   }, [isVisible]);
 
-  function saveConsent(value: "accepted" | "rejected") {
-    window.localStorage.setItem(storageKey, value);
-    setIsVisible(false);
-  }
-
   if (!isVisible) {
     return null;
   }
@@ -32,31 +47,26 @@ export function CookieConsent() {
     <div className="fixed inset-x-0 bottom-0 z-[60] px-4 pb-4 sm:px-6 lg:px-8">
       <section
         aria-label="Çerez tercihi"
-        className="mx-auto flex max-w-5xl flex-col gap-4 rounded-xl border border-white/14 bg-[#08111f]/95 p-4 text-slate-300 shadow-2xl shadow-black/45 backdrop-blur-2xl sm:flex-row sm:items-center sm:justify-between sm:p-5"
+        className="mx-auto flex max-w-5xl flex-col gap-4 rounded-xl border border-white/14 bg-brand-navy-deep/95 p-4 text-slate-300 shadow-2xl shadow-black/45 backdrop-blur-2xl sm:flex-row sm:items-center sm:justify-between sm:p-5"
       >
         <p className="max-w-3xl text-sm leading-6">
           Çerezleri site deneyimini iyileştirmek, güvenliği sağlamak ve yasal
           yükümlülükleri yerine getirmek için kullanıyoruz. Tercihinizi KVKK ve
           GDPR ilkelerine uygun şekilde yönetebilirsiniz.{" "}
-          <a href="/cookies" className="font-semibold text-emerald-200 transition hover:text-white">
+          <a
+            href="/cookies"
+            className="font-semibold text-red-200 transition hover:text-white"
+          >
             Çerez Politikası
           </a>
         </p>
-        <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={() => saveConsent("rejected")}
-            className="h-11 rounded-lg border border-white/14 bg-white/6 px-4 text-sm font-semibold text-white transition hover:bg-white/10"
-          >
-            Reject
-          </button>
-          <button
-            type="button"
-            onClick={() => saveConsent("accepted")}
-            className="h-11 rounded-lg bg-emerald-400 px-4 text-sm font-bold text-slate-950 transition hover:bg-emerald-300"
-          >
-            Accept
-          </button>
+        <div className="flex shrink-0 gap-2 text-white">
+          <Button variant="secondary" size="md" onClick={() => saveConsent("rejected")}>
+            Reddet
+          </Button>
+          <Button variant="primary" size="md" onClick={() => saveConsent("accepted")}>
+            Kabul Et
+          </Button>
         </div>
       </section>
     </div>

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { AlertCircle, CheckCircle2, ShieldCheck } from "lucide-react";
 import { SiteFooter } from "../../components/SiteFooter";
+import { SiteHeader } from "../../components/SiteHeader";
+import { Badge } from "../../components/ui/Badge";
 import { getPaymentLinkDisplayState } from "@/lib/payment/payment-links";
 import { PayForm } from "../PayForm";
 
@@ -52,16 +54,18 @@ export default async function PayReferencePage({ params }: PayReferencePageProps
   const state = await getPaymentLinkDisplayState(referenceId);
 
   return (
-    <main className="min-h-screen bg-[#08111f] text-white">
-      <section className="relative overflow-hidden px-5 py-12 sm:px-6 lg:px-8">
+    <main id="main-content" className="min-h-screen bg-brand-navy-deep text-white">
+      <SiteHeader />
+
+      <section className="relative overflow-hidden px-5 pt-28 pb-12 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-50" aria-hidden="true" />
         <div
-          className="absolute left-1/2 top-0 h-[28rem] w-[58rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.2),rgba(30,116,176,0.12)_38%,transparent_70%)] blur-3xl"
+          className="absolute left-1/2 top-0 h-[28rem] w-[58rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(233,27,48,0.16),rgba(11,24,46,0.12)_38%,transparent_70%)] blur-3xl"
           aria-hidden="true"
         />
 
         <div className="relative mx-auto max-w-7xl">
-          <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">Secure Payment</p>
+          <Badge tone="red">Güvenli Ödeme</Badge>
           <h1 className="mt-4 text-4xl font-semibold tracking-normal sm:text-6xl">Güvenli ödeme</h1>
 
           {state.kind === "payable" && (
@@ -78,8 +82,8 @@ export default async function PayReferencePage({ params }: PayReferencePageProps
                 priceLabel={currencyFormatter.format(state.link.amount)}
                 typeLabel={
                   state.link.paymentType === "deposit"
-                    ? "Proje Depozitosu / Project Deposit"
-                    : "Özel Ödeme Linki / Private Payment Link"
+                    ? "Proje Depozitosu"
+                    : "Özel Ödeme Linki"
                 }
               />
             </>
@@ -87,7 +91,7 @@ export default async function PayReferencePage({ params }: PayReferencePageProps
 
           {state.kind === "consumed" && (
             <NoticeCard
-              icon={<CheckCircle2 size={28} className="mx-auto text-emerald-300" aria-hidden="true" />}
+              icon={<CheckCircle2 size={28} className="mx-auto text-success" aria-hidden="true" />}
               title="Bu ödeme zaten tamamlandı."
               body="Bu bağlantı üzerinden ödeme daha önce başarıyla alınmıştır ve tekrar kullanılamaz. Bir sorunuz varsa Pharos Teknoloji ekibiyle iletişime geçin."
             />
@@ -95,7 +99,7 @@ export default async function PayReferencePage({ params }: PayReferencePageProps
 
           {state.kind === "expired" && (
             <NoticeCard
-              icon={<AlertCircle size={28} className="mx-auto text-amber-300" aria-hidden="true" />}
+              icon={<AlertCircle size={28} className="mx-auto text-warning" aria-hidden="true" />}
               title="Bu ödeme bağlantısının süresi doldu."
               body="Yeni bir ödeme bağlantısı için lütfen Pharos Teknoloji ekibiyle iletişime geçin."
             />
@@ -103,7 +107,7 @@ export default async function PayReferencePage({ params }: PayReferencePageProps
 
           {state.kind === "not_found" && (
             <NoticeCard
-              icon={<AlertCircle size={28} className="mx-auto text-amber-300" aria-hidden="true" />}
+              icon={<AlertCircle size={28} className="mx-auto text-warning" aria-hidden="true" />}
               title="Ödeme linki bulunamadı."
               body="Bu bağlantı geçersiz olabilir. Doğru bağlantı için lütfen Pharos Teknoloji ekibiyle iletişime geçin."
             />

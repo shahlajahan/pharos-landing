@@ -4,38 +4,53 @@ import { company } from "../company";
 import { ContactForm } from "../components/ContactForm";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
+import { Reveal } from "../components/motion/Reveal";
+import { Badge } from "../components/ui/Badge";
 
 export const metadata: Metadata = {
-  title: "Contact | Pharos Teknoloji",
+  title: "İletişim | Pharos Teknoloji",
   description:
     "Pharos Teknoloji iletişim bilgileri, şirket adresi, MERSIS, vergi numarası ve proje iletişim formu.",
   alternates: {
     canonical: "/contact",
   },
+  openGraph: {
+    title: "İletişim | Pharos Teknoloji",
+    description:
+      "Pharos Teknoloji iletişim bilgileri ve proje talep formu.",
+    url: "/contact",
+    siteName: "Pharos Teknoloji",
+    locale: "tr_TR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 const details = [
-  { icon: Building2, label: "Company name", value: company.name },
-  { icon: MapPin, label: "Address", value: company.address },
-  { icon: Phone, label: "Phone", value: company.phone, href: company.phoneHref },
-  { icon: Mail, label: "Email", value: company.email, href: company.emailHref },
+  { icon: Building2, label: "Şirket unvanı", value: company.name },
+  { icon: MapPin, label: "Adres", value: company.address },
+  { icon: Phone, label: "Telefon", value: company.phone, href: company.phoneHref },
+  { icon: Mail, label: "E-posta", value: company.email, href: company.emailHref },
   { icon: Building2, label: "MERSIS", value: company.mersis },
-  { icon: Building2, label: "Tax number", value: company.taxNumber },
+  { icon: Building2, label: "Vergi numarası", value: company.taxNumber },
 ];
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-[#08111f] text-white">
+    <main id="main-content" className="min-h-screen bg-brand-navy-deep text-white">
       <SiteHeader />
 
       <section className="relative overflow-hidden border-b border-white/10 px-5 pt-28 pb-12 sm:px-6 sm:pt-32 lg:px-8">
         <div className="hero-grid absolute inset-0 opacity-45" aria-hidden="true" />
-        <div className="absolute left-1/2 top-0 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(49,165,127,0.18),rgba(30,116,176,0.12)_42%,transparent_72%)] blur-3xl" aria-hidden="true" />
-        <div className="relative mx-auto max-w-6xl">
+        <div
+          className="absolute left-1/2 top-0 h-80 w-[44rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(233,27,48,0.16),rgba(11,24,46,0.12)_42%,transparent_72%)] blur-3xl"
+          aria-hidden="true"
+        />
+        <Reveal className="relative mx-auto max-w-6xl">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-[0.16em] text-emerald-300">
-              İletişim / Contact
-            </p>
+            <Badge tone="red">İletişim</Badge>
             <h1 className="mt-4 text-4xl font-semibold tracking-normal text-white sm:text-5xl">
               Pharos Teknoloji iletişim bilgileri
             </h1>
@@ -44,12 +59,12 @@ export default function ContactPage() {
               ürün geliştirme ihtiyaçlarınız için bizimle iletişime geçin.
             </p>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       <section className="px-5 py-12 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-          <aside className="h-fit rounded-xl border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/15 sm:p-7">
+          <Reveal as="aside" className="h-fit rounded-xl border border-white/10 bg-white/[0.055] p-5 shadow-2xl shadow-black/15 sm:p-7">
             <div className="grid gap-3">
               {details.map((item) => {
                 const Icon = item.icon;
@@ -63,7 +78,7 @@ export default function ContactPage() {
 
                 return (
                   <div key={item.label} className="flex gap-3 rounded-lg border border-white/10 bg-white/[0.05] p-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-slate-950">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-brand-navy">
                       <Icon size={18} aria-hidden="true" />
                     </div>
                     <div>
@@ -76,12 +91,14 @@ export default function ContactPage() {
                 );
               })}
             </div>
-          </aside>
+          </Reveal>
 
-          <ContactForm
-            variant="contact"
-            className="rounded-xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:p-7"
-          />
+          <Reveal delay={0.1}>
+            <ContactForm
+              variant="contact"
+              className="rounded-xl border border-white/14 bg-white/10 p-5 shadow-2xl shadow-black/35 backdrop-blur-2xl sm:p-7"
+            />
+          </Reveal>
         </div>
       </section>
 
